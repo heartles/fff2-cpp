@@ -1,0 +1,143 @@
+#include <cstdio>
+#include <typeinfo>
+#include <array>
+#include <iostream>
+#include <exception>
+
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/path.hpp>
+#include "glad/glad.h"
+#include "GLFW/glfw3.h"
+#include "glm/glm.hpp"
+#include "glm/gtx/transform.hpp"
+
+#include "graphics.h"
+#include "common.h"
+#include "game.h"
+
+
+using namespace std;
+namespace fs = boost::filesystem;
+
+std::vector<std::string> Args;
+
+static_assert(sizeof(vec3) == sizeof(GLfloat) * 3, "Struct padding in vec3");
+static_assert(sizeof(float) == sizeof(GLfloat), "float != GLfloat");
+
+string GetGameRootDir()
+{
+    auto path = fs::system_complete(fs::path(Args[0]));
+    string result = path.parent_path().string();
+    Log(result);
+
+    return result;
+}
+
+int main(int argc, char **argv)
+{
+    try
+    {
+        for (int i = 0; i < argc; i++) {
+            Args.push_back(std::string(argv[i]));
+        }
+
+        if (!glfwInit())
+        {
+            Log("Could not initialize glfw");
+            return -1;
+        }
+
+        auto monitor = glfwGetPrimaryMonitor();
+        auto mode = glfwGetVideoMode(monitor);
+        glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+        glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+        glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+        glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+
+        GLFWwindow *window = glfwCreateWindow(mode->width, mode->height, "Fast Food Fight II", nullptr, nullptr);
+        if (!window)
+        {
+            Log("Could not create window");
+            glfwTerminate();
+            return -1;
+        }
+
+        glfwMakeContextCurrent(window);
+        if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+        {
+            Log("Could not load OpenGL");
+            glfwTerminate();
+            return -1;
+        }
+
+        //glDebugMessageCallback(oglDebug, nullptr);
+
+        glfwSwapInterval(0);
+
+        Game g = {};
+        if (g.ShouldClose)
+            Log("\ntrue\n");
+        g.GameDir = GetGameRootDir();
+
+        Log("Initializing Game...");
+        Game_Init(g);
+        double time = glfwGetTime();
+        int DEBUG_loop = 0;
+        while (!g.ShouldClose)
+        {
+            g.ShouldClose = glfwWindowShouldClose(window) != 0;
+            ++DEBUG_loop;
+            for (size_t i = 0; i < sizeof_array(g.Input.Keyboard); ++i)
+            {
+                g.Input.Keyboard[i] = glfwGetKey(window, i) != 0;
+            }
+
+            for (size_t i = 0; i < sizeof_array(g.Input.Mouse); ++i)
+            {
+                g.Input.Mouse[i] = glfwGetMouseButton(window, i) != 0;
+            }
+
+            int x, y;
+            glfwGetWindowSize(window, &x, &y);
+            double mx, my;
+            glfwGetCursorPos(window, &mx, &my);
+
+            g.Input.MouseX = 2 * static_cast<float>(mx) / x - 1;
+            g.Input.MouseY = 1 - static_cast<float>(my) / y * 2;
+
+            Game_Update(g);
+
+            glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT);
+            Game_Render(g);
+
+            glfwSwapBuffers(window);
+            glfwPollEvents();
+
+            double newTime = glfwGetTime();
+            g.DT = static_cast<float>(newTime - time);
+
+            double fps = 1 / g.DT;
+
+            if (fps < 59) {
+
+                std::printf("Missed a frame! Game loop iteration %d, %f fps\n", DEBUG_loop, fps);
+            }
+
+            //std::printf("FPS: %f\n", fps);
+
+            time = newTime;
+        }
+
+        glfwTerminate();
+
+    }
+    catch (std::exception e)
+    {
+        std::cout << e.what() << endl;
+        std::exit(-1);
+    }
+	return 0;
+}

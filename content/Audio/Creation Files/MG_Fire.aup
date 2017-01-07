@@ -1,0 +1,23 @@
+<?xml version="1.0" standalone="no" ?>
+<!DOCTYPE project PUBLIC "-//audacityproject-1.3.0//DTD//EN" "http://audacity.sourceforge.net/xml/audacityproject-1.3.0.dtd" >
+<project xmlns="http://audacity.sourceforge.net/xml/" projname="MG_Fire_data" version="1.3.0" audacityversion="2.1.2" sel0="0.0000000000" sel1="0.0000000000" vpos="0" h="0.5568423364" zoom="2210.6796116505" rate="96000.0" snapto="off" selectionformat="hh:mm:ss + milliseconds" frequencyformat="Hz" bandwidthformat="octaves">
+	<tags/>
+	<wavetrack name="L110A2_LMG_5.56mm_belt_fed_1m_right_MKH8040_1_clean_Single_shots_x_2" channel="2" linked="0" mute="0" solo="0" height="150" minimized="0" isSelected="1" rate="96000" gain="1.0" pan="0.0">
+		<waveclip offset="0.52863425">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="27793">
+				<waveblock start="0">
+					<simpleblockfile filename="e0000863.au" len="27793" min="0.001049" max="0.0128" rms="0.003869"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+		<waveclip offset="0.00000000">
+			<sequence maxsamples="262144" sampleformat="262159" numsamples="50749">
+				<waveblock start="0">
+					<simpleblockfile filename="e0000f50.au" len="50749" min="-1.000011" max="1.000028" rms="0.135819"/>
+				</waveblock>
+			</sequence>
+			<envelope numpoints="0"/>
+		</waveclip>
+	</wavetrack>
+</project>

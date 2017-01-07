@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="16" height="9" tilewidth="1" tileheight="1" nextobjectid="15">
+ <tileset firstgid="1" name="Objects" tilewidth="272" tileheight="133" tilecount="48" columns="0">
+  <tile id="0">
+   <image width="32" height="32" source="../FastFoodFightTwo.gmx/sprites/images/AmmoIcon_spr_0.png"/>
+  </tile>
+  <tile id="1">
+   <image width="32" height="32" source="../FastFoodFightTwo.gmx/sprites/images/AmmoPickup_spr_0.png"/>
+  </tile>
+  <tile id="2">
+   <image width="32" height="32" source="../FastFoodFightTwo.gmx/sprites/images/BloodSplash_spr_0.png"/>
+  </tile>
+  <tile id="3">
+   <image width="32" height="32" source="../FastFoodFightTwo.gmx/sprites/images/BloodSplat_spr_0.png"/>
+  </tile>
+  <tile id="4">
+   <image width="32" height="32" source="../FastFoodFightTwo.gmx/sprites/images/Bullet_spr_0.png"/>
+  </tile>
+  <tile id="5">
+   <image width="22" height="22" source="../FastFoodFightTwo.gmx/sprites/images/BulletSmall_spr_0.png"/>
+  </tile>
+  <tile id="6">
+   <image width="128" height="81" source="../FastFoodFightTwo.gmx/sprites/images/Burger_spr_0.png"/>
+  </tile>
+  <tile id="7">
+   <image width="64" height="64" source="../FastFoodFightTwo.gmx/sprites/images/burgerbox_spr_0.png"/>
+  </tile>
+  <tile id="8">
+   <image width="50" height="50" source="../FastFoodFightTwo.gmx/sprites/images/Cross_spr_0.png"/>
+  </tile>
+  <tile id="21">
+   <image width="64" height="64" source="../FastFoodFightTwo.gmx/sprites/images/Fry_spr_0.png"/>
+  </tile>
+  <tile id="22">
+   <image width="64" height="64" source="../FastFoodFightTwo.gmx/sprites/images/Gate_spr_0.png"/>
+  </tile>
+  <tile id="23">
+   <image width="32" height="32" source="../FastFoodFightTwo.gmx/sprites/images/Grenade_spr_0.png"/>
+  </tile>
+  <tile id="24">
+   <image width="50" height="50" source="../FastFoodFightTwo.gmx/sprites/images/HealthIcon_spr_0.png"/>
+  </tile>
+  <tile id="25">
+   <image width="64" height="64" source="../FastFoodFightTwo.gmx/sprites/images/InvisWall_spr_0.png"/>
+  </tile>
+  <tile id="26">
+   <image width="64" height="64" source="../FastFoodFightTwo.gmx/sprites/images/Key1_spr_0.png"/>
+  </tile>
+  <tile id="27">
+   <image width="64" height="64" source="../FastFoodFightTwo.gmx/sprites/images/Key2_spr_0.png"/>
+  </tile>
+  <tile id="28">
+   <image width="64" height="64" source="../FastFoodFightTwo.gmx/sprites/images/Key3_spr_0.png"/>
+  </tile>
+  <tile id="29">
+   <image width="64" height="64" source="../FastFoodFightTwo.gmx/sprites/images/Key4_spr_0.png"/>
+  </tile>
+  <tile id="30">
+   <image width="64" height="64" source="../FastFoodFightTwo.gmx/sprites/images/KeyA_spr_0.png"/>
+  </tile>
+  <tile id="31">
+   <image width="64" height="64" source="../FastFoodFightTwo.gmx/sprites/images/KeyBase_spr_0.png"/>
+  </tile>
+  <tile id="32">
+   <image width="64" height="64" source="../FastFoodFightTwo.gmx/sprites/images/KeyD_spr_0.png"/>
+  </tile>
+  <tile id="33">
+   <image width="64" height="64" source="../FastFoodFightTwo.gmx/sprites/images/KeyS_spr_0.png"/>
+  </tile>
+  <tile id="34">
+   <image width="128" height="64" source="../FastFoodFightTwo.gmx/sprites/images/KeyShift_spr_0.png"/>
+  </tile>
+  <tile id="35">
+   <image width="64" height="64" source="../FastFoodFightTwo.gmx/sprites/images/KeyW_spr_0.png"/>
+  </tile>
+  <tile id="36">
+   <image width="200" height="80" source="../FastFoodFightTwo.gmx/sprites/images/LevelBackground_spr_0.png"/>
+  </tile>
+  <tile id="38">
+   <image width="256" height="133" source="../FastFoodFightTwo.gmx/sprites/images/Logo_spr_0.png"/>
+  </tile>
+  <tile id="39">
+   <image width="32" height="32" source="../FastFoodFightTwo.gmx/sprites/images/MagsIcon_spr_0.png"/>
+  </tile>
+  <tile id="40">
+   <image width="272" height="128" source="../FastFoodFightTwo.gmx/sprites/images/MG_spr_0.png"/>
+  </tile>
+  <tile id="41">
+   <image width="68" height="32" source="../FastFoodFightTwo.gmx/sprites/images/MGIcon_spr_0.png"/>
+  </tile>
+  <tile id="42">
+   <image width="96" height="128" source="../FastFoodFightTwo.gmx/sprites/images/Mouse_spr_0.png"/>
+  </tile>
+  <tile id="43">
+   <image width="96" height="128" source="../FastFoodFightTwo.gmx/sprites/images/MouseLeft_spr_0.png"/>
+  </tile>
+  <tile id="44">
+   <image width="96" height="128" source="../FastFoodFightTwo.gmx/sprites/images/MouseRight_spr_0.png"/>
+  </tile>
+  <tile id="45">
+   <image width="192" height="128" source="../FastFoodFightTwo.gmx/sprites/images/Pistol_spr_0.png"/>
+  </tile>
+  <tile id="46">
+   <image width="48" height="32" source="../FastFoodFightTwo.gmx/sprites/images/PistolIcon_spr_0.png"/>
+  </tile>
+  <tile id="47">
+   <image width="128" height="128" source="../FastFoodFightTwo.gmx/sprites/images/Player_MG_spr_0.png"/>
+  </tile>
+  <tile id="48">
+   <image width="128" height="128" source="../FastFoodFightTwo.gmx/sprites/images/Player_Pistols_spr_0.png"/>
+  </tile>
+  <tile id="49">
+   <image width="128" height="128" source="../FastFoodFightTwo.gmx/sprites/images/Player_Rifle_spr_0.png"/>
+  </tile>
+  <tile id="50">
+   <image width="128" height="128" source="../FastFoodFightTwo.gmx/sprites/images/Player_TriShot_spr_0.png"/>
+  </tile>
+  <tile id="51">
+   <image width="128" height="128" source="../FastFoodFightTwo.gmx/sprites/images/PlayerPistols_spr_0.png"/>
+  </tile>
+  <tile id="52">
+   <image width="50" height="50" source="../FastFoodFightTwo.gmx/sprites/images/ReloadIndicator_spr_0.png"/>
+  </tile>
+  <tile id="53">
+   <image width="50" height="50" source="../FastFoodFightTwo.gmx/sprites/images/Reticule_spr_0.png"/>
+  </tile>
+  <tile id="54">
+   <image width="272" height="80" source="../FastFoodFightTwo.gmx/sprites/images/Rifle_spr_0.png"/>
+  </tile>
+  <tile id="55">
+   <image width="68" height="20" source="../FastFoodFightTwo.gmx/sprites/images/RifleIcon_spr_0.png"/>
+  </tile>
+  <tile id="56">
+   <image width="80" height="80" source="../FastFoodFightTwo.gmx/sprites/images/spr_burgerbox_0.png"/>
+  </tile>
+  <tile id="57">
+   <image width="50" height="50" source="../FastFoodFightTwo.gmx/sprites/images/SprintIcon_spr_0.png"/>
+  </tile>
+  <tile id="58">
+   <image width="192" height="80" source="../FastFoodFightTwo.gmx/sprites/images/TriShot_spr_0.png"/>
+  </tile>
+  <tile id="59">
+   <image width="48" height="20" source="../FastFoodFightTwo.gmx/sprites/images/TriShotIcon_spr_0.png"/>
+  </tile>
+  <tile id="60">
+   <image width="64" height="64" source="../FastFoodFightTwo.gmx/sprites/images/Wall_spr_0.png"/>
+  </tile>
+ </tileset>
+ <objectgroup name="Menu">
+  <properties>
+   <property name="GUILayer" value=""/>
+  </properties>
+  <object id="1" name="PlayButton" type="GUI_Button" gid="37" x="7.25" y="7" width="1.5" height="0.6">
+   <properties>
+    <property name="OnClick" value="LoadLevel"/>
+    <property name="Target" value="mp_grid.json"/>
+    <property name="Text" value="PLACE YOUR ORDER"/>
+   </properties>
+  </object>
+  <object id="10" name="Title" type="GUI_Image" gid="39" x="4.25" y="4.75" width="7.5" height="3.89648"/>
+ </objectgroup>
+</map>
