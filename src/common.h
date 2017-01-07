@@ -8,10 +8,10 @@
 #include <glm/glm.hpp>
 
 #define internal_function static
-#define sizeof_array(arr) (sizeof(arr)/sizeof(arr[0]))
+#define sizeof_array(arr) (sizeof(arr) / sizeof(arr[0]))
 const float pi = 3.14159f;
 
-//TODO: remove STL dependencies
+// TODO: remove STL dependencies
 struct Input
 {
     bool Keyboard[349];
@@ -26,48 +26,43 @@ sizeof_vector(std::vector<T> vector)
     return vector.size() * sizeof(T);
 }
 
-void
-Log(std::string s);
+void Log(std::string s);
 
 struct Allocator
 {
-	virtual void * Alloc(size_t size) = 0;
-	virtual void Dealloc(void *data, size_t size) = 0;
-	virtual ~Allocator() {};
+    virtual void* Alloc(size_t size) = 0;
+    virtual void Dealloc(void* data, size_t size) = 0;
+    virtual ~Allocator(){};
 };
 
-struct StackAlloc
-	: public Allocator
+struct StackAlloc : public Allocator
 {
-	char *_memory;
-	size_t _used, _max;
+    char* _memory;
+    size_t _used, _max;
 
-	StackAlloc(size_t max)
-	{
-		_memory = (char *)std::malloc(max);
-		_max = max;
-		_used = 0;
-	}
+    StackAlloc(size_t max)
+    {
+        _memory = (char*)std::malloc(max);
+        _max = max;
+        _used = 0;
+    }
 
-	void * Alloc(size_t size) override
-	{
-		if (_used + size > _max) {
-			//TODO
-			std::exit(-1);
-		}
-		auto ret = &(_memory[_used]);
-		_used += size;
-		return ret;
-	}
+    void* Alloc(size_t size) override
+    {
+        if (_used + size > _max) {
+            // TODO
+            std::exit(-1);
+        }
+        auto ret = &(_memory[_used]);
+        _used += size;
+        return ret;
+    }
 
-	void Dealloc(void * data, size_t size) override
-	{
-		//TODO Error handling
-		_used -= size;
-	}
+    void Dealloc(void* data, size_t size) override
+    {
+        // TODO Error handling
+        _used -= size;
+    }
 
-	~StackAlloc() override
-	{
-		std::free(_memory);
-	}
+    ~StackAlloc() override { std::free(_memory); }
 };

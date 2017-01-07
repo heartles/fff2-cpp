@@ -1,8 +1,8 @@
 #pragma once
 
-#include <glm/glm.hpp>
 #include "graphics.h"
 #include "math.h"
+#include <glm/glm.hpp>
 
 struct Game;
 
@@ -13,8 +13,8 @@ struct Player
     vec2 _vel;
     float _rot;
 
-	vec2 Pos();
-	void Init(Game&);
-	void Update(Game&);
-	void Draw(Game&);
+    vec2 Pos();
+    void Init(Game&);
+    void Update(Game&);
+    void Draw(Game&);
 };

@@ -3,7 +3,7 @@
 #include <cassert>
 #include <glm/glm.hpp>
 
-template<typename T>
+template <typename T>
 inline T
 sign(T val)
 {
@@ -14,7 +14,10 @@ struct vec2
 {
     union
     {
-        struct {float x, y;};
+        struct
+        {
+            float x, y;
+        };
         float _arr[2];
     };
 
@@ -30,21 +33,15 @@ struct vec2
         y = 0;
     }
 
-    inline float & operator [] (int index)
+    inline float& operator[](int index)
     {
         assert(index < 2);
         return _arr[index];
     }
 
-    inline float Length()
-    {
-        return std::sqrt(LengthSquared());
-    }
+    inline float Length() { return std::sqrt(LengthSquared()); }
 
-    inline float LengthSquared()
-    {
-        return x * x + y * y;
-    }
+    inline float LengthSquared() { return x * x + y * y; }
 
     inline vec2 Normalize()
     {
@@ -55,17 +52,17 @@ struct vec2
         return vec2{ x / len, y / len };
     }
 
-    inline vec2 operator * (float scalar)
+    inline vec2 operator*(float scalar)
     {
-        return vec2{x * scalar, y * scalar};
+        return vec2{ x * scalar, y * scalar };
     }
 
-    inline vec2 operator + (vec2 other)
+    inline vec2 operator+(vec2 other)
     {
-        return vec2{x + other.x, y + other.y};
+        return vec2{ x + other.x, y + other.y };
     }
 
-    inline vec2 operator += (vec2 other)
+    inline vec2 operator+=(vec2 other)
     {
         x += other.x;
         y += other.y;
@@ -77,8 +74,14 @@ struct vec3
 {
     union
     {
-        struct { float x, y, z; };
-        struct { float r, g, b; };
+        struct
+        {
+            float x, y, z;
+        };
+        struct
+        {
+            float r, g, b;
+        };
         float _arr[3];
     };
 
@@ -95,21 +98,15 @@ struct vec3
         y = 0;
     }
 
-    inline float & operator [] (int index)
+    inline float& operator[](int index)
     {
         assert(index < 3);
         return _arr[index];
     }
 
-    inline float Length()
-    {
-        return std::sqrt(LengthSquared());
-    }
+    inline float Length() { return std::sqrt(LengthSquared()); }
 
-    inline float LengthSquared()
-    {
-        return x * x + y * y + z * z;
-    }
+    inline float LengthSquared() { return x * x + y * y + z * z; }
 
     inline vec3 normalize()
     {
@@ -144,14 +141,11 @@ Identity()
     return output;
 }
 
-glm::mat3
-Translate(vec2 amount);
+glm::mat3 Translate(vec2 amount);
 
-glm::mat3
-Scale(vec2 amount);
+glm::mat3 Scale(vec2 amount);
 
-glm::mat3
-Rotate(float amount);
+glm::mat3 Rotate(float amount);
 
 /*
 inline

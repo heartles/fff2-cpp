@@ -4,13 +4,12 @@ glm::mat3
 Translate(vec2 amount)
 {
     glm::mat3 output = Identity<glm::mat3>();
-    glm::vec3 &col3 = output[2];
+    glm::vec3& col3 = output[2];
     col3.x = amount.x;
     col3.y = amount.y;
 
     return output;
 }
-
 
 glm::mat3
 Scale(vec2 amount)

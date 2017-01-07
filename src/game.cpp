@@ -1,13 +1,13 @@
 #include "game.h"
-#include "glm/common.hpp"
 #include "GLFW/glfw3.h"
-#include <cmath>
+#include "content.h"
+#include "glm/common.hpp"
 #include "graphics.h"
 #include "math.h"
-#include "json/json.h"
-#include <fstream>
-#include "content.h"
 #include "shader.h"
+#include "json/json.h"
+#include <cmath>
+#include <fstream>
 
 #include <iostream>
 
@@ -36,241 +36,232 @@ ToGame(Game& info, vec2 screen)
     return result;
 }
 
-
 void
 Game_Init(Game& info)
 {
     Log("creating world");
-	info.View = { 0, 0, 30, 16.875f };
-	info.Player.Init(info);
+    info.View = { 0, 0, 30, 16.875f };
+    info.Player.Init(info);
 
-    StackAlloc alloc(1024*1024);
-    auto shader = LoadShader(
-        info.GameDir + "/content/textured.gl.vert",
-        info.GameDir + "/content/textured.gl.frag"
-    );
+    StackAlloc alloc(1024 * 1024);
+    auto shader = LoadShader(info.GameDir + "/content/textured.gl.vert",
+                             info.GameDir + "/content/textured.gl.frag");
 
     shader.Apply();
 
-	string fileLoc = info.GameDir + "/content/mp_grid.json";
+    string fileLoc = info.GameDir + "/content/mp_grid.json";
 
-	vector<Tileset> *Tilesets = &info.Tilesets;
+    vector<Tileset>* Tilesets = &info.Tilesets;
 
-	LoadLevel(fileLoc, info);
+    LoadLevel(fileLoc, info);
 }
 
-
 void
-LoadLevel(const std::string &fileLoc, Game &info)
+LoadLevel(const std::string& fileLoc, Game& info)
 {
-	Json::Value root;
-	fstream file;
-	file.open(fileLoc);
-	Log("1");
-	Json::Value val;
-	file >> val;
+    Json::Value root;
+    fstream file;
+    file.open(fileLoc);
+    Log("1");
+    Json::Value val;
+    file >> val;
     Log("2");
-	auto tilesetsJson = val["tilesets"];
-	info.Tilesets.reserve(tilesetsJson.size());
+    auto tilesetsJson = val["tilesets"];
+    info.Tilesets.reserve(tilesetsJson.size());
 
-	auto tileWidth = val["tilewidth"].asInt();
-	auto tileHeight = val["tileheight"].asInt();
+    auto tileWidth = val["tilewidth"].asInt();
+    auto tileHeight = val["tileheight"].asInt();
 
-	int roomWidth = val["width"].asInt();
-	int roomHeight = val["height"].asInt();
-	std::cout << tileWidth;
-	std::cout << tileHeight;
+    int roomWidth = val["width"].asInt();
+    int roomHeight = val["height"].asInt();
+    std::cout << tileWidth;
+    std::cout << tileHeight;
 
-	for (auto tileset : tilesetsJson) {
-		Tileset t;
+    for (auto tileset : tilesetsJson) {
+        Tileset t;
 
-		if (tileset["properties"]["type"] != "tilemap")
-			continue;
+        if (tileset["properties"]["type"] != "tilemap")
+            continue;
 
-		auto imageString = tileset["image"].asString();
+        auto imageString = tileset["image"].asString();
 
-		t.ImageName = imageString.substr(imageString.find_last_of('/'));
-		t.PixelCountY = tileset["imageheight"].asInt();
-		t.PixelCountX = tileset["imagewidth"].asInt();
-		t.TileWidth = tileset["tilewidth"].asInt();
-		t.TileHeight = tileset["tileheight"].asInt();
-		t.TileCountX = t.PixelCountX / t.TileWidth;
-		t.TileCountY = t.PixelCountY / t.TileHeight;
-		t.TileCountTotal = tileset["tilecount"].asInt();
+        t.ImageName = imageString.substr(imageString.find_last_of('/'));
+        t.PixelCountY = tileset["imageheight"].asInt();
+        t.PixelCountX = tileset["imagewidth"].asInt();
+        t.TileWidth = tileset["tilewidth"].asInt();
+        t.TileHeight = tileset["tileheight"].asInt();
+        t.TileCountX = t.PixelCountX / t.TileWidth;
+        t.TileCountY = t.PixelCountY / t.TileHeight;
+        t.TileCountTotal = tileset["tilecount"].asInt();
 
-		t.Image = DEBUG_LoadSprite(info.GameDir + "/content" + t.ImageName);
+        t.Image = DEBUG_LoadSprite(info.GameDir + "/content" + t.ImageName);
 
-		info.Tilesets.push_back(t);
-	}
+        info.Tilesets.push_back(t);
+    }
 
-	auto layersJSON = val["layers"];
-	for (auto layer : layersJSON) {
-		if (layer["type"] == "tilelayer")
-			ParseTileLayer(layer, info, roomWidth);
-		else if (layer["type"] == "objectgroup")
-		{
-			for (auto obj : layer["objects"])
-			{
+    auto layersJSON = val["layers"];
+    for (auto layer : layersJSON) {
+        if (layer["type"] == "tilelayer")
+            ParseTileLayer(layer, info, roomWidth);
+        else if (layer["type"] == "objectgroup") {
+            for (auto obj : layer["objects"]) {
                 std::string type = obj["type"].asString();
 
-                if (type == "Player")
-                {
+                if (type == "Player") {
                     auto halfWidth = obj["width"].asFloat() / 2 / 64;
 
                     auto halfHeight = obj["height"].asFloat() / 2 / 64;
 
-                    info.Player._pos = vec2{obj["x"].asFloat() / tileWidth, -obj["y"].asFloat() / tileHeight};
-                    std::cout << info.Player._pos.x << ", " << info.Player._pos.y << std::endl;
+                    info.Player._pos = vec2{ obj["x"].asFloat() / tileWidth,
+                                             -obj["y"].asFloat() / tileHeight };
+                    std::cout << info.Player._pos.x << ", "
+                              << info.Player._pos.y << std::endl;
                 }
+            }
+        }
+    }
 
-			}
-		}
-	}
+    for (auto& t : info.Tilesets) {
+        glGenVertexArrays(1, &t.VertexArrayID);
+        GLenum err = glGetError();
+        glBindVertexArray(t.VertexArrayID);
 
-	for (auto &t : info.Tilesets) {
-		glGenVertexArrays(1, &t.VertexArrayID);
-		GLenum err = glGetError();
-		glBindVertexArray(t.VertexArrayID);
+        glGenBuffers(2, t.VertexBufferIDs);
 
-		glGenBuffers(2, t.VertexBufferIDs);
+        glBindBuffer(GL_ARRAY_BUFFER, t.VertexBufferIDs[0]);
+        glBufferData(GL_ARRAY_BUFFER, sizeof_vector(t.Positions),
+                     t.Positions.data(), GL_STATIC_DRAW);
 
-		glBindBuffer(GL_ARRAY_BUFFER, t.VertexBufferIDs[0]);
-		glBufferData(
-			GL_ARRAY_BUFFER,
-			sizeof_vector(t.Positions),
-			t.Positions.data(),
-			GL_STATIC_DRAW);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
-		glVertexAttribPointer(
-			0,
-			3,
-			GL_FLOAT,
-			GL_FALSE,
-			0,
-			nullptr);
+        glBindBuffer(GL_ARRAY_BUFFER, t.VertexBufferIDs[1]);
+        glBufferData(GL_ARRAY_BUFFER, sizeof_vector(t.Texcoords),
+                     t.Texcoords.data(), GL_STATIC_DRAW);
 
-		glBindBuffer(GL_ARRAY_BUFFER, t.VertexBufferIDs[1]);
-		glBufferData(
-			GL_ARRAY_BUFFER,
-			sizeof_vector(t.Texcoords),
-			t.Texcoords.data(),
-			GL_STATIC_DRAW);
-
-		glVertexAttribPointer(
-			1,
-			2,
-			GL_FLOAT,
-			GL_FALSE,
-			0,
-			nullptr);
-	}
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+    }
 
     Log("3");
 }
 
 void
-ParseTileLayer(Json::Value &layer, Game & info, int roomWidth)
+ParseTileLayer(Json::Value& layer, Game& info, int roomWidth)
 {
-	auto data = layer["data"];
-	for (int i = 0; i < data.size(); ++i) {
-		auto tile = data[i];
+    auto data = layer["data"];
+    for (int i = 0; i < data.size(); ++i) {
+        auto tile = data[i];
 
-		int tileIndex = tile.asInt();
+        int tileIndex = tile.asInt();
 
-		if (tileIndex == 0)
-			continue;
+        if (tileIndex == 0)
+            continue;
 
-		tileIndex -= 1;
+        tileIndex -= 1;
 
-		int tilesetIndex;
+        int tilesetIndex;
 
-		for (int j = 0; j < info.Tilesets.size(); ++j) {
-			tileIndex -= info.Tilesets[j].TileCountTotal;
-			if (tileIndex < 0) {
-				tileIndex += info.Tilesets[j].TileCountTotal;
-				tilesetIndex = j;
-				break;
-			}
-		}
+        for (int j = 0; j < info.Tilesets.size(); ++j) {
+            tileIndex -= info.Tilesets[j].TileCountTotal;
+            if (tileIndex < 0) {
+                tileIndex += info.Tilesets[j].TileCountTotal;
+                tilesetIndex = j;
+                break;
+            }
+        }
 
-		auto &tileset = info.Tilesets[tilesetIndex];
+        auto& tileset = info.Tilesets[tilesetIndex];
 
-		//Position given from top left corner of tile
-		vec2 position{ float(i % roomWidth), float(-i / roomWidth) };
+        // Position given from top left corner of tile
+        vec2 position{ float(i % roomWidth), float(-i / roomWidth) };
 
-		//tri 1
-		tileset.Positions.push_back({ position.x, position.y - 1, 1.0f, }); //bottom left
-		tileset.Positions.push_back({ position.x + 1, position.y - 1, 1.0f, }); //bottom right
-		tileset.Positions.push_back({ position.x, position.y, 1.0f, }); //top left
+        // tri 1
+        tileset.Positions.push_back({
+          position.x, position.y - 1, 1.0f,
+        }); // bottom left
+        tileset.Positions.push_back({
+          position.x + 1, position.y - 1, 1.0f,
+        }); // bottom right
+        tileset.Positions.push_back({
+          position.x, position.y, 1.0f,
+        }); // top left
 
-																		//tri 2
-		tileset.Positions.push_back({ position.x + 1, position.y, 1.0f, }); //top right
-		tileset.Positions.push_back({ position.x, position.y, 1.0f, }); //top left
-		tileset.Positions.push_back({ position.x + 1, position.y - 1, 1.0f, }); //bottom right
+        // tri 2
+        tileset.Positions.push_back({
+          position.x + 1, position.y, 1.0f,
+        }); // top right
+        tileset.Positions.push_back({
+          position.x, position.y, 1.0f,
+        }); // top left
+        tileset.Positions.push_back({
+          position.x + 1, position.y - 1, 1.0f,
+        }); // bottom right
 
-		vec2 source{ tileIndex % tileset.TileCountX / (float)tileset.TileCountX, tileIndex / tileset.TileCountX / (float)tileset.TileCountY };
-		float dx = 1.0f / tileset.TileCountX;
-		float dy = 1.0f / tileset.TileCountY;
-		vec2 tl = source;
-		vec2 tr{ source.x + dx, source.y, };
-		vec2 bl{ source.x, source.y + dy, };
-		vec2 br{ source.x + dx, source.y + dy, };
+        vec2 source{ tileIndex % tileset.TileCountX / (float)tileset.TileCountX,
+                     tileIndex / tileset.TileCountX /
+                       (float)tileset.TileCountY };
+        float dx = 1.0f / tileset.TileCountX;
+        float dy = 1.0f / tileset.TileCountY;
+        vec2 tl = source;
+        vec2 tr{
+            source.x + dx, source.y,
+        };
+        vec2 bl{
+            source.x, source.y + dy,
+        };
+        vec2 br{
+            source.x + dx, source.y + dy,
+        };
 
+        // tri 1
+        tileset.Texcoords.push_back(bl); // bottom left
+        tileset.Texcoords.push_back(br); // Bottom right
+        tileset.Texcoords.push_back(tl); // top left
 
-		//tri 1
-		tileset.Texcoords.push_back(bl); //bottom left
-		tileset.Texcoords.push_back(br); //Bottom right
-		tileset.Texcoords.push_back(tl); //top left
+        // tri 2
+        tileset.Texcoords.push_back(tr); // top right
+        tileset.Texcoords.push_back(tl); // top left
+        tileset.Texcoords.push_back(br); // Bottom right
 
-
-										 //tri 2
-		tileset.Texcoords.push_back(tr); //top right
-		tileset.Texcoords.push_back(tl); //top left
-		tileset.Texcoords.push_back(br); //Bottom right
-
-		tileset.Tiles.push_back(Tile{ 0, tileIndex, position.x, position.y });
-	}
+        tileset.Tiles.push_back(Tile{ 0, tileIndex, position.x, position.y });
+    }
 }
 
 void
 Game_Update(Game& info)
 {
-	info.Player.Update(info);
+    info.Player.Update(info);
 
-	if (info.Input.Keyboard[GLFW_KEY_ESCAPE])
+    if (info.Input.Keyboard[GLFW_KEY_ESCAPE])
         info.ShouldClose = true;
 
-	info.View.X = info.Player.Pos().x;
-	info.View.Y = info.Player.Pos().y;
+    info.View.X = info.Player.Pos().x;
+    info.View.Y = info.Player.Pos().y;
 }
-
 
 void
 Game_Render(Game& info)
 {
-	glEnable(GL_BLEND);
+    glEnable(GL_BLEND);
 
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glm::mat3 viewMat = //Identity<mat3>();
-		Scale({ 2 / info.View.Width, 2 / info.View.Height }) *
-		Translate({ -info.View.X, -info.View.Y });
+    glm::mat3 viewMat = // Identity<mat3>();
+      Scale({ 2 / info.View.Width, 2 / info.View.Height }) *
+      Translate({ -info.View.X, -info.View.Y });
 
-	for (auto &t : info.Tilesets) {
-		glBindVertexArray(t.VertexArrayID);
+    for (auto& t : info.Tilesets) {
+        glBindVertexArray(t.VertexArrayID);
 
-		glBindTexture(GL_TEXTURE_2D, t.Image.TextureID);
+        glBindTexture(GL_TEXTURE_2D, t.Image.TextureID);
 
-		SetUniform("ModelView", viewMat);
+        SetUniform("ModelView", viewMat);
 
-		glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(0);
 
-		glEnableVertexAttribArray(1);
+        glEnableVertexAttribArray(1);
 
-		glDrawArrays(GL_TRIANGLES, 0, t.Positions.size());
+        glDrawArrays(GL_TRIANGLES, 0, t.Positions.size());
+    }
 
-	}
-
-
-	info.Player.Draw(info);
+    info.Player.Draw(info);
 }

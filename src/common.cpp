@@ -10,7 +10,7 @@ void
 Log(string s)
 {
 #ifdef WINDOWS
-	OutputDebugString(s.c_str());
+    OutputDebugString(s.c_str());
 #endif
-	printf("%s\n", s.c_str());
+    printf("%s\n", s.c_str());
 }

@@ -1,15 +1,16 @@
 #pragma once
 
-#include <string>
-#include <json/json.h>
-#include "graphics.h"
 #include "common.h"
+#include "graphics.h"
 #include "math.h"
+#include <json/json.h>
+#include <string>
 struct Game;
 #include "player.h"
 
 typedef Sprite (*PFN_LOADIMAGE)(std::string filename);
-typedef void (*PFN_DRAWSPRITE)(Sprite, struct Rectangle, struct Rectangle, float);
+typedef void (*PFN_DRAWSPRITE)(Sprite, struct Rectangle, struct Rectangle,
+                               float);
 
 struct Tile
 {
@@ -36,12 +37,6 @@ struct Tileset
 };
 #pragma pack(pop)
 
-
-struct CollisionMask
-{
-
-};
-
 struct Game
 {
     std::string GameDir;
@@ -55,15 +50,15 @@ struct Game
 
     struct Rectangle View;
 
-    //b2Debug _debug;
+    // b2Debug _debug;
 
     std::vector<Tileset> Tilesets;
     std::vector<Tile> Tiles;
 };
 
 void Game_Init(Game&);
-void LoadLevel(const std::string &fileLoc, Game & info);
-void ParseTileLayer(Json::Value &layer, Game & info, int roomWidth);
+void LoadLevel(const std::string& fileLoc, Game& info);
+void ParseTileLayer(Json::Value& layer, Game& info, int roomWidth);
 void Game_Update(Game&);
 void Game_Render(Game&);
 vec2 ToGame(Game& info, vec2 screen);

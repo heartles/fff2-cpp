@@ -6,10 +6,9 @@
 
 struct Shader
 {
-	GLuint _vertShader, _fragShader, _program;
+    GLuint _vertShader, _fragShader, _program;
 
-	void Apply();
+    void Apply();
 };
 
-Shader
-LoadShader(std::string vertPath, std::string fragPath);
+Shader LoadShader(std::string vertPath, std::string fragPath);
