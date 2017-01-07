@@ -57,9 +57,7 @@ LoadShader(std::string vertPath, std::string fragPath)
     s._program = glCreateProgram();
 
     glAttachShader(s._program, s._vertShader);
-
     glAttachShader(s._program, s._fragShader);
-
     glLinkProgram(s._program);
 
     GLint isLinked;

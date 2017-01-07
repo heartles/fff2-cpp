@@ -1,12 +1,11 @@
 #pragma once
 
+#include "game.h"
 #include "graphics.h"
 #include "math.h"
 #include <glm/glm.hpp>
 
-struct Game;
-
-struct Player
+class Player : public GameComponent
 {
     Sprite _spr;
     vec2 _pos;
@@ -14,7 +13,10 @@ struct Player
     float _rot;
 
     vec2 Pos();
-    void Init(Game&);
-    void Update(Game&);
-    void Draw(Game&);
+
+  public:
+    Player(Game& game, const vec2& pos);
+
+    virtual void Update() override;
+    virtual void Draw() override;
 };

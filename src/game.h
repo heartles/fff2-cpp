@@ -5,8 +5,6 @@
 #include "math.h"
 #include <json/json.h>
 #include <string>
-struct Game;
-#include "player.h"
 
 typedef Sprite (*PFN_LOADIMAGE)(std::string filename);
 typedef void (*PFN_DRAWSPRITE)(Sprite, struct Rectangle, struct Rectangle,
@@ -37,6 +35,22 @@ struct Tileset
 };
 #pragma pack(pop)
 
+struct Game;
+class GameComponent
+{
+  public:
+    virtual void Update();
+    virtual void Draw();
+    virtual void DrawGUI();
+    Game& Engine;
+
+  protected:
+    inline GameComponent(Game& g)
+      : Engine(g)
+    {
+    }
+};
+
 struct Game
 {
     std::string GameDir;
@@ -46,12 +60,9 @@ struct Game
     struct Input Input;
     bool ShouldClose;
 
-    struct Player Player;
-
     struct Rectangle View;
 
-    // b2Debug _debug;
-
+    std::vector<GameComponent*> Components;
     std::vector<Tileset> Tilesets;
     std::vector<Tile> Tiles;
 };

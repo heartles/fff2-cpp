@@ -11,6 +11,8 @@
 
 #include <iostream>
 
+#include "player.h"
+
 using namespace std;
 
 struct Rectangle
@@ -41,7 +43,6 @@ Game_Init(Game& info)
 {
     Log("creating world");
     info.View = { 0, 0, 30, 16.875f };
-    info.Player.Init(info);
 
     StackAlloc alloc(1024 * 1024);
     auto shader = LoadShader(info.GameDir + "/content/textured.gl.vert",
@@ -112,10 +113,11 @@ LoadLevel(const std::string& fileLoc, Game& info)
 
                     auto halfHeight = obj["height"].asFloat() / 2 / 64;
 
-                    info.Player._pos = vec2{ obj["x"].asFloat() / tileWidth,
-                                             -obj["y"].asFloat() / tileHeight };
-                    std::cout << info.Player._pos.x << ", "
-                              << info.Player._pos.y << std::endl;
+                    auto pos = vec2{ obj["x"].asFloat() / tileWidth,
+                                     -obj["y"].asFloat() / tileHeight };
+                    std::cout << pos.x << ", " << pos.y << std::endl;
+
+                    info.Components.push_back(new Player(info, pos));
                 }
             }
         }
@@ -229,13 +231,12 @@ ParseTileLayer(Json::Value& layer, Game& info, int roomWidth)
 void
 Game_Update(Game& info)
 {
-    info.Player.Update(info);
-
     if (info.Input.Keyboard[GLFW_KEY_ESCAPE])
         info.ShouldClose = true;
 
-    info.View.X = info.Player.Pos().x;
-    info.View.Y = info.Player.Pos().y;
+    for (auto c : info.Components) {
+        c->Update();
+    }
 }
 
 void
@@ -263,5 +264,26 @@ Game_Render(Game& info)
         glDrawArrays(GL_TRIANGLES, 0, t.Positions.size());
     }
 
-    info.Player.Draw(info);
+    for (auto c : info.Components) {
+        c->Draw();
+    }
+
+    for (auto c : info.Components) {
+        c->DrawGUI();
+    }
+}
+
+void
+GameComponent::Update()
+{
+}
+
+void
+GameComponent::Draw()
+{
+}
+
+void
+GameComponent::DrawGUI()
+{
 }
