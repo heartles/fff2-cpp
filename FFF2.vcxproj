@@ -116,6 +116,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\entities\bullet.cpp" />
     <ClCompile Include="src\common.cpp" />
     <ClCompile Include="src\content.cpp" />
     <ClCompile Include="src\game.cpp" />
@@ -155,6 +156,7 @@
     <ClCompile Include="vendor\stb\image.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\entities\bullet.h" />
     <ClInclude Include="src\common.h" />
     <ClInclude Include="src\content.h" />
     <ClInclude Include="src\game.h" />

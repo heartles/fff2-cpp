@@ -57,6 +57,13 @@ struct vec2
         return vec2{ x * scalar, y * scalar };
     }
 
+    inline vec2 operator*=(float scalar)
+    {
+        x *= scalar;
+        y *= scalar;
+        return *this;
+    }
+
     inline vec2 operator+(vec2 other)
     {
         return vec2{ x + other.x, y + other.y };
@@ -146,6 +153,13 @@ glm::mat3 Translate(vec2 amount);
 glm::mat3 Scale(vec2 amount);
 
 glm::mat3 Rotate(float amount);
+
+template <typename T>
+inline constexpr T
+Lerp(const T& v1, const T& v2, float amount)
+{
+    return (v1 + (v2 - v1) * amount);
+}
 
 /*
 inline

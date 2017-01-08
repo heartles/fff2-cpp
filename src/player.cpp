@@ -3,6 +3,7 @@
 #include "game.h"
 #include "graphics.h"
 #include "math.h"
+#include "entities/bullet.h"
 
 // TODO
 #include <GLFW/glfw3.h>
@@ -43,7 +44,7 @@ Player::Update()
     if (Engine.Input.Keyboard[GLFW_KEY_ESCAPE])
         Engine.ShouldClose = true;
 
-    acc = acc.Normalize() * 32.0f;
+    acc = acc.Normalize() * 24.0f;
     if (sign(acc.x) != sign(_vel.x))
         acc.x += -_vel.x * 10;
     if (sign(acc.y) != sign(_vel.y))
@@ -67,6 +68,10 @@ Player::Update()
 
     Engine.View.X = _pos.x;
     Engine.View.Y = _pos.y;
+
+    if (Engine.Input.Mouse[0]) {
+        Engine.AddComponent(new Bullet(Engine, _pos, _vel));
+    }
 }
 
 void

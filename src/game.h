@@ -65,6 +65,12 @@ struct Game
     std::vector<GameComponent*> Components;
     std::vector<Tileset> Tilesets;
     std::vector<Tile> Tiles;
+
+    std::vector<GameComponent*> tempComponents;
+    inline void AddComponent(GameComponent *c)
+    {
+        tempComponents.push_back(c);
+    }
 };
 
 void Game_Init(Game&);

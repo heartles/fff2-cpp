@@ -5,7 +5,6 @@
 #include <typeinfo>
 
 #include "GLFW/glfw3.h"
-#include "glad/glad.h"
 #include "glm/glm.hpp"
 #include "glm/gtx/transform.hpp"
 #include <boost/filesystem/operations.hpp>

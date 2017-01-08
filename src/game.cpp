@@ -237,6 +237,12 @@ Game_Update(Game& info)
     for (auto c : info.Components) {
         c->Update();
     }
+
+    for (auto c : info.tempComponents) {
+        info.Components.push_back(c);
+    }
+
+    info.tempComponents.clear();
 }
 
 void
