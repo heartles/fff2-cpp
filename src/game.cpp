@@ -113,8 +113,8 @@ LoadLevel(const std::string& fileLoc, Game& info)
 
                 auto halfHeight = obj["height"].asFloat() / 2 / 64;
 
-                auto pos = vec2{ obj["x"].asFloat() / tileWidth,
-                                 -obj["y"].asFloat() / tileHeight };
+                auto pos = vec2{ obj["x"].asFloat() / tileWidth + halfWidth,
+                                 -obj["y"].asFloat() / tileHeight + halfHeight };
 
                 std::string type = obj["type"].asString();
                 if (type == "Player") {
@@ -280,6 +280,11 @@ Game_Render(Game& info)
 
     for (auto c : info.Components) {
         c->DrawGUI();
+    }
+
+    auto spr = info.Content.LoadSprite(info.GameDir + "/content/InvisWall_spr_0.png");
+    for (auto s : info.Statics) {
+        DEBUG_DrawSprite(spr, viewMat * Translate({ s.Rect.X, s.Rect.Y }) * Scale({ s.Rect.Width(), s.Rect.Height() }), FullImage, 0);
     }
 }
 
