@@ -53,6 +53,12 @@ class GameComponent
     }
 };
 
+// Invariant: HalfWidth/HalfHeight are positive
+struct BoundingBox
+{
+    Rectangle Rect;
+};
+
 struct Game
 {
     std::string GameDir;
@@ -69,6 +75,8 @@ struct Game
     std::vector<Tile> Tiles;
 
     ContentManager Content;
+
+    std::vector<BoundingBox> Statics;
 
     std::vector<GameComponent*> tempComponents;
     inline void AddComponent(GameComponent* c) { tempComponents.push_back(c); }

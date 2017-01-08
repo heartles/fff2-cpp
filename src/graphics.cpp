@@ -136,14 +136,14 @@ DEBUG_DrawSprite(Sprite spr, glm::mat3 modelView, struct Rectangle sprPart,
         initializeBuffers();
     }
 
-    uvBufferData[0].x = sprPart.X;
-    uvBufferData[0].y = sprPart.Y + sprPart.Height;
-    uvBufferData[1].x = sprPart.X + sprPart.Width;
-    uvBufferData[1].y = sprPart.Y + sprPart.Height;
-    uvBufferData[2].x = sprPart.X;
-    uvBufferData[2].y = sprPart.Y;
-    uvBufferData[3].x = sprPart.X + sprPart.Width;
-    uvBufferData[3].y = sprPart.Y;
+    uvBufferData[0].x = sprPart.Min().x;
+    uvBufferData[0].y = sprPart.Max().y;
+    uvBufferData[1].x = sprPart.Max().x;
+    uvBufferData[1].y = sprPart.Max().y;
+    uvBufferData[2].x = sprPart.Min().x;
+    uvBufferData[2].y = sprPart.Min().y;
+    uvBufferData[3].x = sprPart.Max().x;
+    uvBufferData[3].y = sprPart.Min().y;
 
     glBindVertexArray(vertexArrayID);
     glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);

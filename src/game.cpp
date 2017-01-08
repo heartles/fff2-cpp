@@ -1,16 +1,17 @@
 #include "game.h"
-#include "GLFW/glfw3.h"
+
+#include <cmath>
+#include <fstream>
+#include <iostream>
+
+#include <GLFW/glfw3.h>
+#include <glm/common.hpp>
+#include <json/json.h>
+
 #include "content.h"
-#include "glm/common.hpp"
 #include "graphics.h"
 #include "math.h"
 #include "shader.h"
-#include "json/json.h"
-#include <cmath>
-#include <fstream>
-
-#include <iostream>
-
 #include "player.h"
 
 using namespace std;
@@ -18,11 +19,11 @@ using namespace std;
 struct Rectangle
 FromPixels(Sprite spr, struct Rectangle r)
 {
-    struct Rectangle output;
+    Rectangle output;
     output.X = r.X / spr.Width;
-    output.Width = r.Width / spr.Width;
+    output.HalfWidth = r.HalfWidth / spr.Width;
     output.Y = r.Y / spr.Height;
-    output.Height = r.Height / spr.Height;
+    output.HalfHeight = r.HalfHeight / spr.Height;
 
     return output;
 }
@@ -32,8 +33,8 @@ ToGame(Game& info, vec2 screen)
 {
     vec2 result;
 
-    result.x = screen.x * info.View.Width / 2 + info.View.X;
-    result.y = screen.y * info.View.Height / 2 + info.View.Y;
+    result.x = screen.x * info.View.HalfWidth + info.View.X;
+    result.y = screen.y * info.View.HalfHeight + info.View.Y;
 
     return result;
 }
@@ -42,7 +43,7 @@ void
 Game_Init(Game& info)
 {
     Log("creating world");
-    info.View = { 0, 0, 30, 16.875f };
+    info.View = { 0, 0, 30/2, 16.875f/2.0f };
 
     StackAlloc alloc(1024 * 1024);
     auto shader = DEBUG_LoadShader(info.GameDir + "/content/textured.gl.vert",
@@ -95,7 +96,8 @@ LoadLevel(const std::string& fileLoc, Game& info)
         t.TileCountY = t.PixelCountY / t.TileHeight;
         t.TileCountTotal = tileset["tilecount"].asInt();
 
-        t.Image = info.Content.LoadSprite(info.GameDir + "/content" + t.ImageName);
+        t.Image =
+          info.Content.LoadSprite(info.GameDir + "/content" + t.ImageName);
 
         info.Tilesets.push_back(t);
     }
@@ -106,18 +108,20 @@ LoadLevel(const std::string& fileLoc, Game& info)
             ParseTileLayer(layer, info, roomWidth);
         else if (layer["type"] == "objectgroup") {
             for (auto obj : layer["objects"]) {
+
+                auto halfWidth = obj["width"].asFloat() / 2 / 64;
+
+                auto halfHeight = obj["height"].asFloat() / 2 / 64;
+
+                auto pos = vec2{ obj["x"].asFloat() / tileWidth,
+                                 -obj["y"].asFloat() / tileHeight };
+
                 std::string type = obj["type"].asString();
-
                 if (type == "Player") {
-                    auto halfWidth = obj["width"].asFloat() / 2 / 64;
-
-                    auto halfHeight = obj["height"].asFloat() / 2 / 64;
-
-                    auto pos = vec2{ obj["x"].asFloat() / tileWidth,
-                                     -obj["y"].asFloat() / tileHeight };
-                    std::cout << pos.x << ", " << pos.y << std::endl;
-
                     info.Components.push_back(new Player(info, pos));
+                } else if (type == "InvisWall") {
+                    info.Statics.push_back(
+                      BoundingBox{ pos.x, pos.y, halfWidth, halfHeight });
                 }
             }
         }
@@ -253,7 +257,7 @@ Game_Render(Game& info)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glm::mat3 viewMat = // Identity<mat3>();
-      Scale({ 2 / info.View.Width, 2 / info.View.Height }) *
+      Scale({ 2 / info.View.Width(), 2 / info.View.Height() }) *
       Translate({ -info.View.X, -info.View.Y });
 
     for (auto& t : info.Tilesets) {

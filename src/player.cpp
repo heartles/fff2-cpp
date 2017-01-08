@@ -60,7 +60,18 @@ Player::Update()
     if (_vel.Length() >= maxSpeed)
         _vel = _vel.Normalize() * maxSpeed;
 
-    _pos += _vel * Engine.DT;
+    auto potentialPos = _pos + _vel * Engine.DT;
+
+    bool collision = false;
+
+    Rectangle mask = { potentialPos.x, potentialPos.y, 0.5f, 0.5f };
+    for (auto s : Engine.Statics) {
+        collision = collision || s.Rect.Intersects(mask);
+    }
+
+    if (!collision) {
+        _pos = potentialPos;
+    }
 
     auto mouse =
       ToGame(Engine, vec2{ Engine.Input.MouseX, Engine.Input.MouseY });
@@ -79,7 +90,7 @@ void
 Player::Draw()
 {
     glm::mat3 modelView =
-      Scale({ 2 / Engine.View.Width, 2 / Engine.View.Height }) *
+      Scale({ 2 / Engine.View.Width(), 2 / Engine.View.Height() }) *
       Translate({ -Engine.View.X, -Engine.View.Y }) *
       Translate({ _pos.x, _pos.y }) * Rotate(-_rot) * Scale({ 1, 1 });
 

@@ -18,7 +18,7 @@ void
 Bullet::Draw()
 {
     glm::mat3 modelView =
-        Scale({ 2 / Engine.View.Width, 2 / Engine.View.Height }) *
+        Scale({ 2 / Engine.View.Width(), 2 / Engine.View.Height() }) *
         Translate({ -Engine.View.X, -Engine.View.Y }) *
         Translate({ _pos.x, _pos.y });
         //* Rotate(-_rot) * Scale({ 1, 1 });
