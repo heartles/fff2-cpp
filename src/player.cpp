@@ -1,9 +1,9 @@
 #include "player.h"
 #include "common.h"
+#include "entities/bullet.h"
 #include "game.h"
 #include "graphics.h"
 #include "math.h"
-#include "entities/bullet.h"
 
 // TODO
 #include <GLFW/glfw3.h>
@@ -19,7 +19,8 @@ Player::Player(Game& game, const vec2& pos)
   , _pos(pos)
 {
     Log("Loading player sprite");
-    _spr = DEBUG_LoadSprite(game.GameDir + "/content/Player_Rifle.png");
+    _spr =
+      Engine.Content.LoadSprite(game.GameDir + "/content/Player_Rifle.png");
     Log("Done");
 }
 

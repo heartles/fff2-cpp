@@ -11,4 +11,4 @@ struct Shader
     void Apply();
 };
 
-Shader LoadShader(std::string vertPath, std::string fragPath);
+Shader DEBUG_LoadShader(std::string vertPath, std::string fragPath);

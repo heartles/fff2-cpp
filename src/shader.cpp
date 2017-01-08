@@ -11,7 +11,7 @@ Shader::Apply()
 }
 
 Shader
-LoadShader(std::string vertPath, std::string fragPath)
+DEBUG_LoadShader(std::string vertPath, std::string fragPath)
 {
     auto v = glCreateShader(GL_VERTEX_SHADER);
     auto f = glCreateShader(GL_FRAGMENT_SHADER);

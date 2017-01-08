@@ -5,7 +5,7 @@
 Bullet::Bullet(Game &g, const vec2 &pos, const vec2 &vel)
     : GameComponent(g), _pos(pos), _vel(vel)
 {
-    _spr = DEBUG_LoadSprite(g.GameDir + "/content/Bullet_spr_0.png");
+    _spr = g.Content.LoadSprite(g.GameDir + "/content/Bullet_spr_0.png");
 }
 
 void

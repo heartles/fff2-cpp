@@ -45,8 +45,8 @@ Game_Init(Game& info)
     info.View = { 0, 0, 30, 16.875f };
 
     StackAlloc alloc(1024 * 1024);
-    auto shader = LoadShader(info.GameDir + "/content/textured.gl.vert",
-                             info.GameDir + "/content/textured.gl.frag");
+    auto shader = DEBUG_LoadShader(info.GameDir + "/content/textured.gl.vert",
+                                   info.GameDir + "/content/textured.gl.frag");
 
     shader.Apply();
 
@@ -95,7 +95,7 @@ LoadLevel(const std::string& fileLoc, Game& info)
         t.TileCountY = t.PixelCountY / t.TileHeight;
         t.TileCountTotal = tileset["tilecount"].asInt();
 
-        t.Image = DEBUG_LoadSprite(info.GameDir + "/content" + t.ImageName);
+        t.Image = info.Content.LoadSprite(info.GameDir + "/content" + t.ImageName);
 
         info.Tilesets.push_back(t);
     }

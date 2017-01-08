@@ -48,3 +48,28 @@ ReadAllText(std::string filename)
     Log("2");
     return (char*)buf;
 }
+
+Shader&
+ContentManager::LoadShader(std::string vertPath, std::string fragPath)
+{
+    if (_shaders.count({ vertPath, fragPath })) {
+        return _shaders[{ vertPath, fragPath }];
+    }
+
+    auto s = DEBUG_LoadShader(vertPath, fragPath);
+    _shaders[{ vertPath, fragPath }] = s;
+
+    return _shaders[{ vertPath, fragPath }];
+}
+
+Sprite&
+ContentManager::LoadSprite(std::string filename)
+{
+    if (_sprites.count(filename)) {
+        return _sprites[filename];
+    }
+
+    auto s = DEBUG_LoadSprite(filename);
+    _sprites[filename] = s;
+    return _sprites[filename];
+}

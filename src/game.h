@@ -6,6 +6,8 @@
 #include <json/json.h>
 #include <string>
 
+#include "content.h"
+
 typedef Sprite (*PFN_LOADIMAGE)(std::string filename);
 typedef void (*PFN_DRAWSPRITE)(Sprite, struct Rectangle, struct Rectangle,
                                float);
@@ -66,11 +68,10 @@ struct Game
     std::vector<Tileset> Tilesets;
     std::vector<Tile> Tiles;
 
+    ContentManager Content;
+
     std::vector<GameComponent*> tempComponents;
-    inline void AddComponent(GameComponent *c)
-    {
-        tempComponents.push_back(c);
-    }
+    inline void AddComponent(GameComponent* c) { tempComponents.push_back(c); }
 };
 
 void Game_Init(Game&);
