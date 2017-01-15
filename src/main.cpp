@@ -86,6 +86,9 @@ main(int argc, char** argv)
         while (!g.ShouldClose) {
             g.ShouldClose = glfwWindowShouldClose(window) != 0;
             ++DEBUG_loop;
+
+            g.OldInput = g.Input;
+
             for (size_t i = 0; i < sizeof_array(g.Input.Keyboard); ++i) {
                 g.Input.Keyboard[i] = glfwGetKey(window, i) != 0;
             }

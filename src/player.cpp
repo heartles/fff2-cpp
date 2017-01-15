@@ -60,23 +60,28 @@ Player::Update()
     if (_vel.Length() >= maxSpeed)
         _vel = _vel.Normalize() * maxSpeed;
 
-    auto potentialPos = _pos + _vel * Engine.DT;
-
-    bool collision = false;
+    vec2 potentialPos = _pos + _vel * Engine.DT;
 
     Rectangle mask = { potentialPos.x, potentialPos.y, 0.5f, 0.5f };
     for (auto s : Engine.Statics) {
         if (s.Rect.Intersects(mask)) {
             s.Rect.HalfWidth += mask.HalfWidth;
             s.Rect.HalfHeight += mask.HalfHeight;
-
             
+            auto angle = atan2f((mask.Y - s.Rect.Y) / s.Rect.HalfHeight, (mask.X - s.Rect.X) / s.Rect.HalfWidth);
+
+            if (angle >= pi / 4 && angle < 3 * pi / 4) // collision from above
+                potentialPos.y = s.Rect.Max().y;
+            else if (angle >= -3 * pi / 4 && angle < -pi / 4) // collision from below
+                potentialPos.y = s.Rect.Min().y;
+            else if (angle >= -pi/4 && angle < pi/4) // collision from right
+                potentialPos.x = s.Rect.Max().x;            
+            else // collision from left
+                potentialPos.x = s.Rect.Min().x;
         }
     }
 
-    if (!collision) {
-        _pos = potentialPos;
-    }
+    _pos = potentialPos;
 
     auto mouse =
       ToGame(Engine, vec2{ Engine.Input.MouseX, Engine.Input.MouseY });
