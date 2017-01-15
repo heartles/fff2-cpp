@@ -35,7 +35,7 @@ struct Rectangle
     inline bool Intersects(const Rectangle& other) const
     {
         return Min().x < other.Max().x && Max().x > other.Min().x &&
-            Min().y < other.Max().y && Max().y > other.Min().y;
+               Min().y < other.Max().y && Max().y > other.Min().y;
     }
 
     static inline Rectangle FromCorner(vec2 mincorner, float w, float h)

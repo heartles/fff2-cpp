@@ -75,6 +75,11 @@ struct vec2
         y += other.y;
         return *this;
     }
+
+    static inline vec2 FromMagnitudeTheta(float magnitude, float theta)
+    {
+        return { magnitude * cos(theta), magnitude * sin(theta) };
+    }
 };
 
 struct vec3

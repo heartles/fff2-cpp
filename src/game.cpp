@@ -11,8 +11,8 @@
 #include "content.h"
 #include "graphics.h"
 #include "math.h"
-#include "shader.h"
 #include "player.h"
+#include "shader.h"
 
 using namespace std;
 
@@ -43,7 +43,7 @@ void
 Game_Init(Game& info)
 {
     Log("creating world");
-    info.View = { 0, 0, 30/2, 16.875f/2.0f };
+    info.View = { 0, 0, 30 / 2, 16.875f / 2.0f };
 
     StackAlloc alloc(1024 * 1024);
     auto shader = DEBUG_LoadShader(info.GameDir + "/content/textured.gl.vert",
@@ -113,8 +113,9 @@ LoadLevel(const std::string& fileLoc, Game& info)
 
                 auto halfHeight = obj["height"].asFloat() / 2 / 64;
 
-                auto pos = vec2{ obj["x"].asFloat() / tileWidth + halfWidth,
-                                 -obj["y"].asFloat() / tileHeight + halfHeight };
+                auto pos =
+                  vec2{ obj["x"].asFloat() / tileWidth + halfWidth,
+                        -obj["y"].asFloat() / tileHeight + halfHeight };
 
                 std::string type = obj["type"].asString();
                 if (type == "Player") {
@@ -282,9 +283,12 @@ Game_Render(Game& info)
         c->DrawGUI();
     }
 
-    auto spr = info.Content.LoadSprite(info.GameDir + "/content/InvisWall_spr_0.png");
+    auto spr =
+      info.Content.LoadSprite(info.GameDir + "/content/InvisWall_spr_0.png");
     for (auto s : info.Statics) {
-        DEBUG_DrawSprite(spr, viewMat * Translate({ s.Rect.X, s.Rect.Y }) * Scale({ s.Rect.Width(), s.Rect.Height() }), FullImage, 0);
+        DEBUG_DrawSprite(spr, viewMat * Translate({ s.Rect.X, s.Rect.Y }) *
+                                Scale({ s.Rect.Width(), s.Rect.Height() }),
+                         FullImage, 0);
     }
 }
 

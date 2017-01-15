@@ -66,7 +66,12 @@ Player::Update()
 
     Rectangle mask = { potentialPos.x, potentialPos.y, 0.5f, 0.5f };
     for (auto s : Engine.Statics) {
-        collision = collision || s.Rect.Intersects(mask);
+        if (s.Rect.Intersects(mask)) {
+            s.Rect.HalfWidth += mask.HalfWidth;
+            s.Rect.HalfHeight += mask.HalfHeight;
+
+            
+        }
     }
 
     if (!collision) {
@@ -81,8 +86,11 @@ Player::Update()
     Engine.View.X = _pos.x;
     Engine.View.Y = _pos.y;
 
-    if (Engine.Input.Mouse[0]) {
-        Engine.AddComponent(new Bullet(Engine, _pos, _vel));
+    const float bulletSpeed = 22.0f;
+    if (Engine.Input.Mouse[0] && !Engine.OldInput.Mouse[0]) {
+        Engine.AddComponent(
+          new Bullet(Engine, _pos,
+                     vec2::FromMagnitudeTheta(bulletSpeed, _rot + pi), _rot));
     }
 }
 
