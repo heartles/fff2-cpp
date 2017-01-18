@@ -1,7 +1,5 @@
 #include "bullet.h"
 
-
-
 Bullet::Bullet(Game &g, const vec2 &pos, const vec2 &vel, float rot)
     : GameComponent(g), _pos(pos), _vel(vel), _rot(rot)
 {
@@ -12,6 +10,13 @@ void
 Bullet::Update()
 {
     _pos += _vel * Engine.DT;
+    Rectangle mask{_pos.x, _pos.y, 1.0f / 10, 1.0f / 10};
+    for (auto s : Engine.Statics) {
+        if (s.Rect.Intersects(mask)) {
+            Engine.RemoveComponent(this);
+        }
+    }
+    
 }
 
 void

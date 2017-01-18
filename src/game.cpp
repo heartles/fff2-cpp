@@ -243,11 +243,21 @@ Game_Update(Game& info)
         c->Update();
     }
 
-    for (auto c : info.tempComponents) {
+    for (auto c : info.componentAddQueue) {
         info.Components.push_back(c);
     }
+    info.componentAddQueue.clear();
 
-    info.tempComponents.clear();
+    for (auto c : info.componentRmQueue) {
+        for (int i = 0; i < info.Components.size(); i++) {
+            if (info.Components[i] == c) {
+                info.Components.erase(info.Components.begin() + i);
+                break;
+            }
+        }
+    }
+    info.componentRmQueue.clear();
+
 }
 
 void

@@ -41,10 +41,12 @@ struct Game;
 class GameComponent
 {
   public:
-    virtual void Update();
-    virtual void Draw();
-    virtual void DrawGUI();
+    inline virtual void Update() {}
+    inline virtual void Draw() {}
+    inline virtual void DrawGUI() {}
+    inline virtual ~GameComponent() {}
     Game& Engine;
+
 
   protected:
     inline GameComponent(Game& g)
@@ -78,8 +80,10 @@ struct Game
 
     std::vector<BoundingBox> Statics;
 
-    std::vector<GameComponent*> tempComponents;
-    inline void AddComponent(GameComponent* c) { tempComponents.push_back(c); }
+    std::vector<GameComponent*> componentAddQueue, componentRmQueue;
+    inline void AddComponent(GameComponent* c) { componentAddQueue.push_back(c); }
+    inline void RemoveComponent(GameComponent *c) { componentRmQueue.push_back(c); }
+
 };
 
 void Game_Init(Game&);
