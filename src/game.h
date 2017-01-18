@@ -84,6 +84,18 @@ struct Game
     inline void AddComponent(GameComponent* c) { componentAddQueue.push_back(c); }
     inline void RemoveComponent(GameComponent *c) { componentRmQueue.push_back(c); }
 
+    template <typename T>
+    inline T *GetInstanceOf() 
+    {
+        for (auto c : Components) {
+            T *val = dynamic_cast<T*>(c);
+            if (val)
+                return val;
+        }
+
+        return nullptr;
+    }
+
 };
 
 void Game_Init(Game&);

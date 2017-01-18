@@ -129,6 +129,9 @@
     <ClCompile Include="src\entities\bullet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\entities\enemy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vendor\khr\khrplatform.h">
@@ -36882,6 +36885,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\entities\bullet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\enemy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

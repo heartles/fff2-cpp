@@ -301,18 +301,3 @@ Game_Render(Game& info)
                          FullImage, 0);
     }
 }
-
-void
-GameComponent::Update()
-{
-}
-
-void
-GameComponent::Draw()
-{
-}
-
-void
-GameComponent::DrawGUI()
-{
-}
