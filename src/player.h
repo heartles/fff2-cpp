@@ -12,9 +12,9 @@ class Player : public GameComponent
     vec2 _vel;
     float _rot;
 
-    vec2 Pos();
 
   public:
+    const vec2 & Pos();
     Player(Game& game, const vec2& pos);
 
     virtual void Update() override;

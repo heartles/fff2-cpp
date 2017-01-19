@@ -13,6 +13,7 @@
 #include "math.h"
 #include "player.h"
 #include "shader.h"
+#include "entities\enemy.h"
 
 using namespace std;
 
@@ -87,7 +88,8 @@ LoadLevel(const std::string& fileLoc, Game& info)
 
         auto imageString = tileset["image"].asString();
 
-        t.ImageName = imageString.substr(imageString.find_last_of('/'));
+        auto lastSlash = imageString.find_last_of('/');
+        t.ImageName = lastSlash != std::string::npos ? imageString.substr(lastSlash) : "/" + imageString;
         t.PixelCountY = tileset["imageheight"].asInt();
         t.PixelCountX = tileset["imagewidth"].asInt();
         t.TileWidth = tileset["tilewidth"].asInt();
@@ -95,6 +97,7 @@ LoadLevel(const std::string& fileLoc, Game& info)
         t.TileCountX = t.PixelCountX / t.TileWidth;
         t.TileCountY = t.PixelCountY / t.TileHeight;
         t.TileCountTotal = tileset["tilecount"].asInt();
+        t.TileStart = tileset["firstgid"].asInt();
 
         t.Image =
           info.Content.LoadSprite(info.GameDir + "/content" + t.ImageName);
@@ -124,6 +127,9 @@ LoadLevel(const std::string& fileLoc, Game& info)
                     info.Statics.push_back(
                       BoundingBox{ pos.x, pos.y, halfWidth, halfHeight });
                 }
+                else if (type == "BasicEnemy") {
+                    info.Components.push_back(new Enemy(pos, info));
+                }
             }
         }
     }
@@ -147,8 +153,6 @@ LoadLevel(const std::string& fileLoc, Game& info)
 
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
     }
-
-    Log("3");
 }
 
 void
@@ -162,21 +166,17 @@ ParseTileLayer(Json::Value& layer, Game& info, int roomWidth)
 
         if (tileIndex == 0)
             continue;
+        
+        Tileset *tilesetPtr = nullptr;
 
-        tileIndex -= 1;
-
-        int tilesetIndex;
-
-        for (int j = 0; j < info.Tilesets.size(); ++j) {
-            tileIndex -= info.Tilesets[j].TileCountTotal;
-            if (tileIndex < 0) {
-                tileIndex += info.Tilesets[j].TileCountTotal;
-                tilesetIndex = j;
-                break;
+        for (auto & t : info.Tilesets) {
+            if (tileIndex - t.TileStart >= 0 && tileIndex - t.TileStart - t.TileCountTotal < 0) {
+                tilesetPtr = &t;
+                tileIndex -= t.TileStart;
             }
         }
 
-        auto& tileset = info.Tilesets[tilesetIndex];
+        auto &tileset = *tilesetPtr;
 
         // Position given from top left corner of tile
         vec2 position{ float(i % roomWidth), float(-i / roomWidth) };
@@ -299,5 +299,26 @@ Game_Render(Game& info)
         DEBUG_DrawSprite(spr, viewMat * Translate({ s.Rect.X, s.Rect.Y }) *
                                 Scale({ s.Rect.Width(), s.Rect.Height() }),
                          FullImage, 0);
+    }
+}
+
+void
+ResolveCollision(Rectangle mask, vec2 *pos, Game &engine) {
+    for (auto s : engine.Statics) {
+        if (s.Rect.Intersects(mask)) {
+            s.Rect.HalfWidth += mask.HalfWidth;
+            s.Rect.HalfHeight += mask.HalfHeight;
+
+            auto angle = atan2f((mask.Y - s.Rect.Y) / s.Rect.HalfHeight, (mask.X - s.Rect.X) / s.Rect.HalfWidth);
+
+            if (angle >= pi / 4 && angle < 3 * pi / 4) // collision from above
+                pos->y = s.Rect.Max().y;
+            else if (angle >= -3 * pi / 4 && angle < -pi / 4) // collision from below
+                pos->y = s.Rect.Min().y;
+            else if (angle >= -pi / 4 && angle < pi / 4) // collision from right
+                pos->x = s.Rect.Max().x;
+            else // collision from left
+                pos->x = s.Rect.Min().x;
+        }
     }
 }

@@ -25,7 +25,7 @@ struct Tileset
     int TileWidth, TileHeight;
     int TileCountX, TileCountY;
     int PixelCountX, PixelCountY;
-    int TileCountTotal;
+    int TileCountTotal, TileStart;
     Sprite Image;
 
     std::vector<vec2> Texcoords;
@@ -104,3 +104,4 @@ void ParseTileLayer(Json::Value& layer, Game& info, int roomWidth);
 void Game_Update(Game&);
 void Game_Render(Game&);
 vec2 ToGame(Game& info, vec2 screen);
+void ResolveCollision(Rectangle mask, vec2 *pos, Game &engine);

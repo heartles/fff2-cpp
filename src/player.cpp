@@ -8,7 +8,7 @@
 // TODO
 #include <GLFW/glfw3.h>
 
-vec2
+const vec2 &
 Player::Pos()
 {
     return _pos;
@@ -63,23 +63,7 @@ Player::Update()
     vec2 potentialPos = _pos + _vel * Engine.DT;
 
     Rectangle mask = { potentialPos.x, potentialPos.y, 0.5f, 0.5f };
-    for (auto s : Engine.Statics) {
-        if (s.Rect.Intersects(mask)) {
-            s.Rect.HalfWidth += mask.HalfWidth;
-            s.Rect.HalfHeight += mask.HalfHeight;
-            
-            auto angle = atan2f((mask.Y - s.Rect.Y) / s.Rect.HalfHeight, (mask.X - s.Rect.X) / s.Rect.HalfWidth);
-
-            if (angle >= pi / 4 && angle < 3 * pi / 4) // collision from above
-                potentialPos.y = s.Rect.Max().y;
-            else if (angle >= -3 * pi / 4 && angle < -pi / 4) // collision from below
-                potentialPos.y = s.Rect.Min().y;
-            else if (angle >= -pi/4 && angle < pi/4) // collision from right
-                potentialPos.x = s.Rect.Max().x;            
-            else // collision from left
-                potentialPos.x = s.Rect.Min().x;
-        }
-    }
+    ResolveCollision(mask, &potentialPos, Engine);
 
     _pos = potentialPos;
 
@@ -98,6 +82,7 @@ Player::Update()
                      vec2::FromMagnitudeTheta(bulletSpeed, _rot + pi), _rot));
     }
 }
+
 
 void
 Player::Draw()

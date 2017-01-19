@@ -6,12 +6,12 @@
 class Enemy :
     public GameComponent
 {
-public:
-
+    vec2 _pos;
     Sprite _spr;
     Player *_target;
+public:
 
-    Enemy(Game &);
+    Enemy(vec2 pos, Game &);
 
     virtual void Update() override;
     virtual void Draw() override;

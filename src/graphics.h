@@ -64,4 +64,4 @@ Sprite DEBUG_LoadSprite(std::string filename);
 
 void SetUniform(std::string name, const glm::mat3& value);
 
-void DEBUG_DrawSprite(Sprite spr, glm::mat3, struct Rectangle, float);
+void DEBUG_DrawSprite(Sprite spr, glm::mat3, struct Rectangle sprPart, float rot);
