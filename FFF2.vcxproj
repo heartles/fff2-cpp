@@ -122,6 +122,7 @@
     <ClCompile Include="src\entities\bullet.cpp" />
     <ClCompile Include="src\common.cpp" />
     <ClCompile Include="src\content.cpp" />
+    <ClCompile Include="src\entities\weapons\rifle.cpp" />
     <ClCompile Include="src\game.cpp" />
     <ClCompile Include="src\graphics.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -163,6 +164,8 @@
     <ClInclude Include="src\entities\bullet.h" />
     <ClInclude Include="src\common.h" />
     <ClInclude Include="src\content.h" />
+    <ClInclude Include="src\entities\weapons\base.h" />
+    <ClInclude Include="src\entities\weapons\rifle.h" />
     <ClInclude Include="src\game.h" />
     <ClInclude Include="src\graphics.h" />
     <ClInclude Include="src\math.h" />

@@ -74,14 +74,14 @@ struct vec2
         return vec2{ x - other.x, y - other.y };
     }
 
-    inline vec2 & operator+=(vec2 other)
+    inline vec2& operator+=(vec2 other)
     {
         x += other.x;
         y += other.y;
         return *this;
     }
 
-    inline vec2 & operator-=(vec2 other)
+    inline vec2& operator-=(vec2 other)
     {
         x -= other.x;
         y -= other.y;

@@ -8,12 +8,6 @@
 // TODO
 #include <GLFW/glfw3.h>
 
-const vec2 &
-Player::Pos()
-{
-    return _pos;
-}
-
 Player::Player(Game& game, const vec2& pos)
   : GameComponent(game)
   , _pos(pos)
@@ -22,6 +16,10 @@ Player::Player(Game& game, const vec2& pos)
     _spr =
       Engine.Content.LoadSprite(game.GameDir + "/content/Player_Rifle.png");
     Log("Done");
+
+    _rifle = new Rifle(this, Engine);
+    _currentWeapon = _rifle;
+    Engine.AddComponent(_rifle);
 }
 
 void
@@ -76,13 +74,14 @@ Player::Update()
     Engine.View.Y = _pos.y;
 
     const float bulletSpeed = 22.0f;
-    if (Engine.Input.Mouse[0] && !Engine.OldInput.Mouse[0]) {
-        Engine.AddComponent(
-          new Bullet(Engine, _pos,
-                     vec2::FromMagnitudeTheta(bulletSpeed, _rot + pi), _rot));
+    if (Engine.Input.Mouse[0]) {
+        _currentWeapon->PrimaryTryFire();
+    }
+
+    if (Engine.Input.Keyboard['R'] && !Engine.OldInput.Keyboard['R']) {
+        _currentWeapon->TryReload();
     }
 }
-
 
 void
 Player::Draw()

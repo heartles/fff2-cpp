@@ -47,7 +47,6 @@ class GameComponent
     inline virtual ~GameComponent() {}
     Game& Engine;
 
-
   protected:
     inline GameComponent(Game& g)
       : Engine(g)
@@ -80,22 +79,27 @@ struct Game
 
     std::vector<BoundingBox> Statics;
 
-    std::vector<GameComponent*> componentAddQueue, componentRmQueue;
-    inline void AddComponent(GameComponent* c) { componentAddQueue.push_back(c); }
-    inline void RemoveComponent(GameComponent *c) { componentRmQueue.push_back(c); }
+    std::vector<GameComponent *> componentAddQueue, componentRmQueue;
+    inline void AddComponent(GameComponent* c)
+    {
+        componentAddQueue.push_back(c);
+    }
+    inline void RemoveComponent(GameComponent* c)
+    {
+        componentRmQueue.push_back(c);
+    }
 
     template <typename T>
-    inline T *GetInstanceOf() 
+    inline T* GetInstanceOf()
     {
         for (auto c : Components) {
-            T *val = dynamic_cast<T*>(c);
+            T* val = dynamic_cast<T*>(c);
             if (val)
                 return val;
         }
 
         return nullptr;
     }
-
 };
 
 void Game_Init(Game&);
@@ -104,4 +108,4 @@ void ParseTileLayer(Json::Value& layer, Game& info, int roomWidth);
 void Game_Update(Game&);
 void Game_Render(Game&);
 vec2 ToGame(Game& info, vec2 screen);
-void ResolveCollision(Rectangle mask, vec2 *pos, Game &engine);
+void ResolveCollision(Rectangle mask, vec2* pos, Game& engine);

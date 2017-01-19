@@ -9,11 +9,11 @@
 #include <json/json.h>
 
 #include "content.h"
+#include "entities\enemy.h"
 #include "graphics.h"
 #include "math.h"
 #include "player.h"
 #include "shader.h"
-#include "entities\enemy.h"
 
 using namespace std;
 
@@ -89,7 +89,9 @@ LoadLevel(const std::string& fileLoc, Game& info)
         auto imageString = tileset["image"].asString();
 
         auto lastSlash = imageString.find_last_of('/');
-        t.ImageName = lastSlash != std::string::npos ? imageString.substr(lastSlash) : "/" + imageString;
+        t.ImageName = lastSlash != std::string::npos
+                        ? imageString.substr(lastSlash)
+                        : "/" + imageString;
         t.PixelCountY = tileset["imageheight"].asInt();
         t.PixelCountX = tileset["imagewidth"].asInt();
         t.TileWidth = tileset["tilewidth"].asInt();
@@ -126,8 +128,7 @@ LoadLevel(const std::string& fileLoc, Game& info)
                 } else if (type == "InvisWall") {
                     info.Statics.push_back(
                       BoundingBox{ pos.x, pos.y, halfWidth, halfHeight });
-                }
-                else if (type == "BasicEnemy") {
+                } else if (type == "BasicEnemy") {
                     info.Components.push_back(new Enemy(pos, info));
                 }
             }
@@ -166,17 +167,18 @@ ParseTileLayer(Json::Value& layer, Game& info, int roomWidth)
 
         if (tileIndex == 0)
             continue;
-        
-        Tileset *tilesetPtr = nullptr;
 
-        for (auto & t : info.Tilesets) {
-            if (tileIndex - t.TileStart >= 0 && tileIndex - t.TileStart - t.TileCountTotal < 0) {
+        Tileset* tilesetPtr = nullptr;
+
+        for (auto& t : info.Tilesets) {
+            if (tileIndex - t.TileStart >= 0 &&
+                tileIndex - t.TileStart - t.TileCountTotal < 0) {
                 tilesetPtr = &t;
                 tileIndex -= t.TileStart;
             }
         }
 
-        auto &tileset = *tilesetPtr;
+        auto& tileset = *tilesetPtr;
 
         // Position given from top left corner of tile
         vec2 position{ float(i % roomWidth), float(-i / roomWidth) };
@@ -257,7 +259,6 @@ Game_Update(Game& info)
         }
     }
     info.componentRmQueue.clear();
-
 }
 
 void
@@ -303,17 +304,20 @@ Game_Render(Game& info)
 }
 
 void
-ResolveCollision(Rectangle mask, vec2 *pos, Game &engine) {
+ResolveCollision(Rectangle mask, vec2* pos, Game& engine)
+{
     for (auto s : engine.Statics) {
         if (s.Rect.Intersects(mask)) {
             s.Rect.HalfWidth += mask.HalfWidth;
             s.Rect.HalfHeight += mask.HalfHeight;
 
-            auto angle = atan2f((mask.Y - s.Rect.Y) / s.Rect.HalfHeight, (mask.X - s.Rect.X) / s.Rect.HalfWidth);
+            auto angle = atan2f((mask.Y - s.Rect.Y) / s.Rect.HalfHeight,
+                                (mask.X - s.Rect.X) / s.Rect.HalfWidth);
 
             if (angle >= pi / 4 && angle < 3 * pi / 4) // collision from above
                 pos->y = s.Rect.Max().y;
-            else if (angle >= -3 * pi / 4 && angle < -pi / 4) // collision from below
+            else if (angle >= -3 * pi / 4 &&
+                     angle < -pi / 4) // collision from below
                 pos->y = s.Rect.Min().y;
             else if (angle >= -pi / 4 && angle < pi / 4) // collision from right
                 pos->x = s.Rect.Max().x;
