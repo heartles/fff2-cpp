@@ -8,8 +8,11 @@
 #include <glm/glm.hpp>
 
 #define internal_function static
-#define sizeof_array(arr) (sizeof(arr) / sizeof(arr[0]))
+#define countof_array(arr) (sizeof(arr) / sizeof(arr[0]))
 const float pi = 3.14159f;
+
+typedef unsigned char u8;
+typedef signed char s8;
 
 // TODO: remove STL dependencies
 struct Input
@@ -17,7 +20,7 @@ struct Input
     bool Keyboard[349];
     bool Mouse[8];
     float MouseX, MouseY;
-};
+};  
 
 template <typename T>
 inline size_t

@@ -39,11 +39,11 @@ struct vec2
         return _arr[index];
     }
 
-    inline float Length() { return std::sqrt(LengthSquared()); }
+    inline float Length() const { return std::sqrt(LengthSquared()); }
 
-    inline float LengthSquared() { return x * x + y * y; }
+    inline float LengthSquared() const { return x * x + y * y; }
 
-    inline vec2 Normalize()
+    inline vec2 Normalize() const
     {
         auto len = Length();
 
@@ -52,7 +52,7 @@ struct vec2
         return vec2{ x / len, y / len };
     }
 
-    inline vec2 operator*(float scalar)
+    inline vec2 operator*(float scalar) const
     {
         return vec2{ x * scalar, y * scalar };
     }
@@ -64,12 +64,12 @@ struct vec2
         return *this;
     }
 
-    inline vec2 operator+(vec2 other)
+    inline vec2 operator+(vec2 other) const
     {
         return vec2{ x + other.x, y + other.y };
     }
 
-    inline vec2 operator-(vec2 other)
+    inline vec2 operator-(vec2 other) const
     {
         return vec2{ x - other.x, y - other.y };
     }
@@ -88,11 +88,31 @@ struct vec2
         return *this;
     }
 
+    inline vec2 operator/(float scalar) const {
+        return { x / scalar, y / scalar };
+    }
+
     static inline vec2 FromMagnitudeTheta(float magnitude, float theta)
     {
         return { magnitude * cos(theta), magnitude * sin(theta) };
     }
 };
+
+struct ivec2
+{
+    int x, y;
+
+    inline ivec2 operator*(int scalar) const
+    {
+        return { x * scalar, y * scalar };
+    }
+
+    inline operator vec2() const
+    {
+        return { float(x), float(y) };
+    }
+};
+
 
 struct vec3
 {
@@ -128,11 +148,11 @@ struct vec3
         return _arr[index];
     }
 
-    inline float Length() { return std::sqrt(LengthSquared()); }
+    inline float Length() const { return std::sqrt(LengthSquared()); }
 
-    inline float LengthSquared() { return x * x + y * y + z * z; }
+    inline float LengthSquared() const { return x * x + y * y + z * z; }
 
-    inline vec3 normalize()
+    inline vec3 Normalize() const
     {
         auto len = Length();
 
@@ -140,6 +160,22 @@ struct vec3
             return vec3();
         return vec3{ x / len, y / len, z / len };
     }
+};
+
+struct vec4
+{
+    union
+    {
+        struct
+        {
+            float x, y, z, w;
+        };
+        struct
+        {
+            float r, g, b, a;
+        };
+        float _arr[4];
+    };
 };
 
 template <typename T>

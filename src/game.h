@@ -69,6 +69,12 @@ struct Game
     struct Input Input;
     bool ShouldClose;
 
+    float FrameCountTime;
+    int FrameCount;
+    float FPS;
+
+    vec4 ClearColor;
+
     struct Rectangle View;
 
     std::vector<GameComponent*> Components;

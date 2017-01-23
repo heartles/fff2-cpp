@@ -3,11 +3,15 @@
 #include <cstdint>
 #include <string>
 #include <vector>
+#include <map>
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
 #include "math.h"
+#include "shader.h"
 
 struct Sprite
 {
@@ -15,6 +19,36 @@ struct Sprite
     int Height;
     std::vector<uint8_t> Memory;
     GLuint TextureID;
+};
+
+namespace Colors
+{
+    const vec4 Black = { 0,0,0,1 };
+    const vec4 White = { 1,1,1,1 };
+    const vec4 Red = { 1,0,0,1 };
+    const vec4 Green = { 0,1,0,1 };
+    const vec4 Blue = { 0,0,1,1 };
+};
+
+struct Character
+{
+    Sprite Sprite;
+    ivec2 Offset; // Offset from origin to left/top of char
+    ivec2 Advance; // Offset to next char/line
+};
+
+class Font
+{
+    std::map<uint64_t, Character> _codepoints;
+    Shader _shader;
+
+public:
+    inline Font() {}
+
+    inline Font(std::map<uint64_t, Character> &&p, Shader s) : _codepoints(p), _shader(s)
+    {}
+
+    void RenderText(std::string, ivec2 pos, float scale, vec4 color);
 };
 
 struct Rectangle
@@ -66,3 +100,5 @@ void SetUniform(std::string name, const glm::mat3& value);
 
 void DEBUG_DrawSprite(Sprite spr, glm::mat3, struct Rectangle sprPart,
                       float rot);
+
+Font DEBUG_LoadFont(std::string filename, int pxSize, Shader s);

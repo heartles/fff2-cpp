@@ -39,7 +39,9 @@ main(int argc, char** argv)
         Args.push_back(std::string(argv[i]));
     }
 
+#ifdef DEBUG_EXCEPTION_HANDLE
     try {
+#endif
 
         if (!glfwInit()) {
             Log("Could not initialize glfw");
@@ -89,11 +91,11 @@ main(int argc, char** argv)
 
             g.OldInput = g.Input;
 
-            for (size_t i = 0; i < sizeof_array(g.Input.Keyboard); ++i) {
+            for (size_t i = 0; i < countof_array(g.Input.Keyboard); ++i) {
                 g.Input.Keyboard[i] = glfwGetKey(window, i) != 0;
             }
 
-            for (size_t i = 0; i < sizeof_array(g.Input.Mouse); ++i) {
+            for (size_t i = 0; i < countof_array(g.Input.Mouse); ++i) {
                 g.Input.Mouse[i] = glfwGetMouseButton(window, i) != 0;
             }
 
@@ -107,7 +109,7 @@ main(int argc, char** argv)
 
             Game_Update(g);
 
-            glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+            glClearColor(g.ClearColor.r, g.ClearColor.g, g.ClearColor.b, g.ClearColor.a);
             glClear(GL_COLOR_BUFFER_BIT);
             Game_Render(g);
 
@@ -131,10 +133,14 @@ main(int argc, char** argv)
         }
 
         glfwTerminate();
+#ifdef DEBUG_EXCEPTION_HANDLE
 
-    } catch (std::exception e) {
+    }
+    
+    catch (std::exception e) {
         std::cout << e.what() << endl;
         std::exit(-1);
     }
+#endif
     return 0;
 }

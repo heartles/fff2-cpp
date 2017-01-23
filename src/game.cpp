@@ -14,6 +14,7 @@
 #include "math.h"
 #include "player.h"
 #include "shader.h"
+#include "gui.h"
 
 using namespace std;
 
@@ -40,13 +41,23 @@ ToGame(Game& info, vec2 screen)
     return result;
 }
 
+Font f;
+
 void
 Game_Init(Game& info)
 {
+    info.FrameCountTime = 1.0f;
+    info.FrameCount = 0;
     Log("creating world");
     info.View = { 0, 0, 30 / 2, 16.875f / 2.0f };
 
     StackAlloc alloc(1024 * 1024);
+
+    info.ClearColor = Colors::White;
+
+    auto s = info.Content.LoadShader(info.GameDir + "/content/text.gl.vert", info.GameDir + "/content/text.gl.frag");
+    f = DEBUG_LoadFont("C:/Windows/fonts/times.ttf", 32, s);
+    
     auto shader = DEBUG_LoadShader(info.GameDir + "/content/textured.gl.vert",
                                    info.GameDir + "/content/textured.gl.frag");
 
@@ -57,6 +68,7 @@ Game_Init(Game& info)
     vector<Tileset>* Tilesets = &info.Tilesets;
 
     LoadLevel(fileLoc, info);
+
 }
 
 void
@@ -268,16 +280,21 @@ Game_Render(Game& info)
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    auto shader = info.Content.LoadShader(info.GameDir + "/content/textured.gl.vert",
+        info.GameDir + "/content/textured.gl.frag");
+
+    shader.Apply();
+
     glm::mat3 viewMat = // Identity<mat3>();
-      Scale({ 2 / info.View.Width(), 2 / info.View.Height() }) *
-      Translate({ -info.View.X, -info.View.Y });
+        Scale({ 2 / info.View.Width(), 2 / info.View.Height() }) *
+        Translate({ -info.View.X, -info.View.Y });
 
     for (auto& t : info.Tilesets) {
         glBindVertexArray(t.VertexArrayID);
 
         glBindTexture(GL_TEXTURE_2D, t.Image.TextureID);
 
-        SetUniform("ModelView", viewMat);
+        SetUniform("projection", viewMat);
 
         glEnableVertexAttribArray(0);
 
@@ -290,17 +307,29 @@ Game_Render(Game& info)
         c->Draw();
     }
 
+    auto spr =
+        info.Content.LoadSprite(info.GameDir + "/content/InvisWall_spr_0.png");
+
+    for (auto s : info.Statics) {
+        DEBUG_DrawSprite(spr, viewMat * Translate({ s.Rect.X, s.Rect.Y }) *
+            Scale({ s.Rect.Width(), s.Rect.Height() }),
+            FullImage, 0);
+    }
+
     for (auto c : info.Components) {
         c->DrawGUI();
     }
 
-    auto spr =
-      info.Content.LoadSprite(info.GameDir + "/content/InvisWall_spr_0.png");
-    for (auto s : info.Statics) {
-        DEBUG_DrawSprite(spr, viewMat * Translate({ s.Rect.X, s.Rect.Y }) *
-                                Scale({ s.Rect.Width(), s.Rect.Height() }),
-                         FullImage, 0);
+    info.FrameCount++;
+    info.FrameCountTime += info.DT;
+    
+    if (info.FrameCountTime > 1.0f) {
+        info.FPS = info.FrameCount / info.FrameCountTime;
+        info.FrameCount = 0;
+        info.FrameCountTime = 0.0f;
     }
+
+    f.RenderText("FPS: " + std::to_string(info.FPS), { 0, 1080-24}, 1, Colors::Black);
 }
 
 void

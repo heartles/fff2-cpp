@@ -1,6 +1,9 @@
 #include "graphics.h"
 
 #include <exception>
+#include <array>
+
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "common.h"
 #include "content.h"
@@ -9,6 +12,126 @@
 #include "stb/image.h"
 
 using namespace std;
+
+FT_Library Freetype = 0;
+
+Font
+DEBUG_LoadFont(std::string filename, int pxSize, Shader s)
+{
+    if (!Freetype) {
+        auto err = FT_Init_FreeType(&Freetype);
+        if (err) {
+            throw err;
+        }
+    }
+
+    FT_Face face;
+
+    auto err = FT_New_Face(Freetype, filename.c_str(), 0, &face);
+    if (err) {
+        throw err;
+    }
+
+    err = FT_Set_Pixel_Sizes(face, 0, pxSize);
+    if (err) {
+        throw err;
+    }
+
+    std::map<uint64_t, Character> points{};
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // Disable byte-alignment restriction
+
+    for (GLubyte c = 0; c < 128; c++)
+    {
+        // Load character glyph 
+        if (FT_Load_Char(face, c, FT_LOAD_RENDER))
+        {
+            Log("ERROR::FREETYTPE: Failed to load Glyph");
+            continue;
+        }
+        // Generate texture
+        GLuint texture;
+        glGenTextures(1, &texture);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexImage2D(
+            GL_TEXTURE_2D,
+            0,
+            GL_RED,
+            face->glyph->bitmap.width,
+            face->glyph->bitmap.rows,
+            0,
+            GL_RED,
+            GL_UNSIGNED_BYTE,
+            face->glyph->bitmap.buffer
+        );
+        
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        
+        Character character = {
+            Sprite{ int(face->glyph->bitmap.width), int(face->glyph->bitmap.rows), std::vector<uint8_t>{}, texture},
+            {face->glyph->bitmap_left, face->glyph->bitmap_top},
+            {face->glyph->advance.x, face->glyph->advance.y}
+        };
+        points.insert(std::pair<GLchar, Character>(c, character));
+    }
+
+    FT_Done_Face(face);
+
+
+    return Font(std::move(points), s);
+}
+
+const std::array<const vec2, 4> uvFullImage{ {
+    {
+        0.0f, 1.0f,
+    }, // Bottom left
+    {
+        1.0f, 1.0f,
+    }, // Bottom right
+    {
+        0.0f, 0.0f,
+    }, // Top Left
+    {
+        1.0f, 0.0f,
+    }, // Top right
+    } };
+
+
+void
+Font::RenderText(std::string text, ivec2 pos, float scale, vec4 color)
+{
+    _shader.Apply();
+
+    for (auto c : text) {
+        auto ch = _codepoints[c];
+
+        vec2 chPos = {
+            pos.x + scale * ch.Offset.x,
+            pos.y - scale * (ch.Sprite.Height - ch.Offset.y)
+        };
+
+        vec2 wh = {
+            ch.Sprite.Width * scale,
+            ch.Sprite.Height * scale
+        };
+
+        glm::mat3 screenToHUD = 
+            Translate({ -1, -1 }) *
+            Scale({ 2 / 1920.0f, 2 / 1080.0f }) *
+            Translate(chPos) * Translate(wh / 2) * Scale(wh);/**/
+        
+        glUniform3f(glGetUniformLocation(_shader._program, "textColor"), color.r, color.g, color.b);
+
+        DEBUG_DrawSprite(Sprite{ 0,0,{}, ch.Sprite.TextureID}, screenToHUD, FullImage, 0); 
+        pos.x += ch.Advance.x / 64 * scale;
+
+
+
+
+    }
+}
 
 Sprite
 DEBUG_LoadSprite(std::string filename)
@@ -49,21 +172,6 @@ vector<vec3> locationBufferData{
     {
       0.5f, 0.5f, 1.0f,
     }, // top right
-};
-
-vector<vec2> uvFullImage{
-    {
-      0.0f, 1.0f,
-    }, // Bottom left
-    {
-      1.0f, 1.0f,
-    }, // Bottom right
-    {
-      0.0f, 0.0f,
-    }, // Top Left
-    {
-      1.0f, 0.0f,
-    }, // Top right
 };
 
 vector<vec2> uvBufferData{
@@ -129,7 +237,7 @@ SetUniform(std::string name, const glm::mat3& value)
 }
 
 void
-DEBUG_DrawSprite(Sprite spr, glm::mat3 modelView, struct Rectangle sprPart,
+DEBUG_DrawSprite(Sprite spr, glm::mat3 projection, struct Rectangle sprPart,
                  float rotation)
 {
     if (locationBuffer == 0 || uvBuffer == 0) {
@@ -156,7 +264,9 @@ DEBUG_DrawSprite(Sprite spr, glm::mat3 modelView, struct Rectangle sprPart,
 
     glBindTexture(GL_TEXTURE_2D, spr.TextureID);
 
-    glUniformMatrix3fv(0, 1, GL_FALSE, (GLfloat*)&modelView);
+    GLint shader;
+    glGetIntegerv(GL_CURRENT_PROGRAM, &shader);
+    glUniformMatrix3fv(glGetUniformLocation(shader, "projection"), 1, GL_FALSE, reinterpret_cast<GLfloat*>(&projection));
 
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
