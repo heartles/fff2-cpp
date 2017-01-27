@@ -32072,5 +32072,9 @@
       <Filter>Header Files</Filter>
     </None>
     <None Include="packages.config" />
+    <None Include="content\Shaders\colored.gl.vert" />
+    <None Include="content\Shaders\colored.gl.frag" />
+    <None Include="content\Shaders\text.gl.vert" />
+    <None Include="content\Shaders\text.gl.frag" />
   </ItemGroup>
 </Project>
