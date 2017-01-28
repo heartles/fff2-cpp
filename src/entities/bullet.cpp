@@ -29,5 +29,5 @@ Bullet::Draw()
       Translate({ -Engine.View.X, -Engine.View.Y }) *
       Translate({ _pos.x, _pos.y }) * Rotate(-_rot);
 
-    DEBUG_DrawSprite(_spr, modelView, FullImage, 0);
+    DEBUG_DrawSprite(_spr, modelView, FullImage, Colors::White);
 }

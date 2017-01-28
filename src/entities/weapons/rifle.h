@@ -5,6 +5,8 @@
 class Player;
 class Rifle : public WeaponBase
 {
+    friend class PlayerHUD;
+
     Player* _player;
 
     int _ammo = 12, _mags = 12;

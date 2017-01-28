@@ -9,12 +9,13 @@
 #include <json/json.h>
 
 #include "content.h"
-#include "entities\enemy.h"
+#include "entities/enemy.h"
 #include "graphics.h"
 #include "math.h"
 #include "player.h"
 #include "shader.h"
 #include "gui.h"
+#include "gui/framerateStats.h"
 
 using namespace std;
 
@@ -41,22 +42,18 @@ ToGame(Game& info, vec2 screen)
     return result;
 }
 
-Font f;
 
 void
 Game_Init(Game& info)
 {
-    info.FrameCountTime = 1.0f;
-    info.FrameCount = 0;
     Log("creating world");
-    info.View = { 0, 0, 30 / 2, 16.875f / 2.0f };
+    info.View = Rectangle{ 0, 0, 30 / 2, 16.875f / 2.0f };
 
     StackAlloc alloc(1024 * 1024);
 
     info.ClearColor = Colors::White;
 
-    auto s = info.Content.LoadShader(info.GameDir + "/content/text.gl.vert", info.GameDir + "/content/text.gl.frag");
-    f = DEBUG_LoadFont("C:/Windows/fonts/times.ttf", 32, s);
+    info.AddComponent(new FramerateStats(info));
     
     auto shader = DEBUG_LoadShader(info.GameDir + "/content/textured.gl.vert",
                                    info.GameDir + "/content/textured.gl.frag");
@@ -271,6 +268,21 @@ Game_Update(Game& info)
         }
     }
     info.componentRmQueue.clear();
+
+    for (auto c : info.guiComponentAddQueue) {
+        info.GUIComponents.push_back(c);
+    }
+    info.guiComponentAddQueue.clear();
+
+    for (auto c : info.guiComponentRmQueue) {
+        for (int i = 0; i < info.GUIComponents.size(); i++) {
+            if (info.GUIComponents[i] == c) {
+                info.GUIComponents.erase(info.GUIComponents.begin() + i);
+                break;
+            }
+        }
+    }
+    info.guiComponentRmQueue.clear();
 }
 
 void
@@ -295,6 +307,7 @@ Game_Render(Game& info)
         glBindTexture(GL_TEXTURE_2D, t.Image.TextureID);
 
         SetUniform("projection", viewMat);
+        glUniform4f(1, 1, 1, 1, 1);
 
         glEnableVertexAttribArray(0);
 
@@ -313,23 +326,13 @@ Game_Render(Game& info)
     for (auto s : info.Statics) {
         DEBUG_DrawSprite(spr, viewMat * Translate({ s.Rect.X, s.Rect.Y }) *
             Scale({ s.Rect.Width(), s.Rect.Height() }),
-            FullImage, 0);
+            FullImage, Colors::Red);
     }
 
-    for (auto c : info.Components) {
-        c->DrawGUI();
+    for (auto c : info.GUIComponents) {
+        c->Draw();
     }
 
-    info.FrameCount++;
-    info.FrameCountTime += info.DT;
-    
-    if (info.FrameCountTime > 1.0f) {
-        info.FPS = info.FrameCount / info.FrameCountTime;
-        info.FrameCount = 0;
-        info.FrameCountTime = 0.0f;
-    }
-
-    f.RenderText("FPS: " + std::to_string(info.FPS), { 0, 1080-24}, 1, Colors::Black);
 }
 
 void

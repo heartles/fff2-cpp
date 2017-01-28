@@ -31,5 +31,5 @@ Enemy::Draw()
       Scale({ 2 / Engine.View.Width(), 2 / Engine.View.Height() }) *
       Translate({ -Engine.View.X, -Engine.View.Y }) * Translate(_pos);
 
-    DEBUG_DrawSprite(_spr, modelView, FullImage, 0);
+    DEBUG_DrawSprite(_spr, modelView, FullImage, Colors::White);
 }

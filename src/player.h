@@ -17,6 +17,8 @@ class Player : public GameComponent
     Rifle* _rifle;
     WeaponBase* _currentWeapon;
 
+    friend class PlayerHUD;
+
   public:
     inline const vec2& Pos() const { return _pos; }
 

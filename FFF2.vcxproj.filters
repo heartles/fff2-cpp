@@ -135,6 +135,12 @@
     <ClCompile Include="src\entities\weapons\rifle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\gui\playerHUD.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\gui\framerateStats.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vendor\khr\khrplatform.h">
@@ -31740,6 +31746,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="vendor\freetype2\freetype\ttunpat.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\gui\framerateStats.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

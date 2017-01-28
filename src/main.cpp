@@ -81,6 +81,8 @@ main(int argc, char** argv)
             Log("\ntrue\n");
         g.GameDir = GetGameRootDir();
 
+        g.Screen = Rectangle::FromCorner({}, mode->width, mode->height);
+
         Log("Initializing Game...");
         Game_Init(g);
         double time = glfwGetTime();

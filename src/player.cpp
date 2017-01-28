@@ -1,12 +1,15 @@
 #include "player.h"
+
 #include "common.h"
 #include "entities/bullet.h"
 #include "game.h"
 #include "graphics.h"
 #include "math.h"
+#include "gui/playerHUD.h"
 
 // TODO
 #include <GLFW/glfw3.h>
+
 
 Player::Player(Game& game, const vec2& pos)
   : GameComponent(game)
@@ -17,9 +20,12 @@ Player::Player(Game& game, const vec2& pos)
       Engine.Content.LoadSprite(game.GameDir + "/content/Player_Rifle.png");
     Log("Done");
 
+
     _rifle = new Rifle(this, Engine);
     _currentWeapon = _rifle;
     Engine.AddComponent(_rifle);
+
+    Engine.AddComponent(new PlayerHUD(this, Engine));
 }
 
 void
@@ -86,10 +92,5 @@ Player::Update()
 void
 Player::Draw()
 {
-    glm::mat3 modelView =
-      Scale({ 2 / Engine.View.Width(), 2 / Engine.View.Height() }) *
-      Translate({ -Engine.View.X, -Engine.View.Y }) *
-      Translate({ _pos.x, _pos.y }) * Rotate(-_rot) * Scale({ 1, 1 });
-
-    DEBUG_DrawSprite(_spr, modelView, FullImage, _rot);
+    Engine.View.DrawSprite(_spr, _pos, _rot);
 }

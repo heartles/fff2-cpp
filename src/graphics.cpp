@@ -100,7 +100,7 @@ const std::array<const vec2, 4> uvFullImage{ {
 
 
 void
-Font::RenderText(std::string text, ivec2 pos, float scale, vec4 color)
+Font::RenderText(std::string text, vec2 pos, float scale, vec4 color)
 {
     _shader.Apply();
 
@@ -124,11 +124,8 @@ Font::RenderText(std::string text, ivec2 pos, float scale, vec4 color)
         
         glUniform3f(glGetUniformLocation(_shader._program, "textColor"), color.r, color.g, color.b);
 
-        DEBUG_DrawSprite(Sprite{ 0,0,{}, ch.Sprite.TextureID}, screenToHUD, FullImage, 0); 
+        DEBUG_DrawSprite(Sprite{ 0,0,{}, ch.Sprite.TextureID}, screenToHUD, FullImage, Colors::White); 
         pos.x += ch.Advance.x / 64 * scale;
-
-
-
 
     }
 }
@@ -236,9 +233,10 @@ SetUniform(std::string name, const glm::mat3& value)
     glUniformMatrix3fv(loc, 1, GL_FALSE, (GLfloat*)&value);
 }
 
+
+
 void
-DEBUG_DrawSprite(Sprite spr, glm::mat3 projection, struct Rectangle sprPart,
-                 float rotation)
+DEBUG_DrawSprite(Sprite spr, glm::mat3 projection, Rectangle sprPart, vec4 color)
 {
     if (locationBuffer == 0 || uvBuffer == 0) {
         initializeBuffers();
@@ -267,6 +265,7 @@ DEBUG_DrawSprite(Sprite spr, glm::mat3 projection, struct Rectangle sprPart,
     GLint shader;
     glGetIntegerv(GL_CURRENT_PROGRAM, &shader);
     glUniformMatrix3fv(glGetUniformLocation(shader, "projection"), 1, GL_FALSE, reinterpret_cast<GLfloat*>(&projection));
+    glUniform4f(glGetUniformLocation(shader, "color"), color.r, color.g, color.b, color.a);
 
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
@@ -274,4 +273,16 @@ DEBUG_DrawSprite(Sprite spr, glm::mat3 projection, struct Rectangle sprPart,
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
+}
+
+void
+OrthoView::DrawSpritePart(Sprite spr, vec2 pos, Rectangle sprPart, vec2 scale, float rotation, vec4 color)
+{
+    auto projection =
+        Matrix() *
+        Translate(pos) *
+        Rotate(-rotation) *
+        Scale(scale);
+
+    DEBUG_DrawSprite(spr, projection, sprPart, color);
 }

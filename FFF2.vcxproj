@@ -193,6 +193,8 @@
     <ClCompile Include="src\entities\weapons\rifle.cpp" />
     <ClCompile Include="src\game.cpp" />
     <ClCompile Include="src\graphics.cpp" />
+    <ClCompile Include="src\gui\framerateStats.cpp" />
+    <ClCompile Include="src\gui\playerHUD.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\math.cpp" />
     <ClCompile Include="src\player.cpp" />
@@ -237,6 +239,7 @@
     <ClInclude Include="src\game.h" />
     <ClInclude Include="src\graphics.h" />
     <ClInclude Include="src\gui.h" />
+    <ClInclude Include="src\gui\framerateStats.h" />
     <ClInclude Include="src\gui\playerHUD.h" />
     <ClInclude Include="src\math.h" />
     <ClInclude Include="src\player.h" />

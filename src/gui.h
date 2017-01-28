@@ -1,15 +1,16 @@
 #pragma once
 
-#include "game.h"
-class Game;
+struct Game;
 class GUIComponent
 {
-    virtual void Draw() = 0;
-    virtual ~GUIComponent() = 0;
+public:
+    inline virtual void Draw() {}
 
-    Game &Engine;
 protected:
+    Game &Engine;
     inline GUIComponent(Game &g)
         : Engine(g)
     {}
+
+    inline virtual ~GUIComponent() {}
 };

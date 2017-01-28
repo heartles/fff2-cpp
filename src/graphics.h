@@ -48,7 +48,7 @@ public:
     inline Font(std::map<uint64_t, Character> &&p, Shader s) : _codepoints(p), _shader(s)
     {}
 
-    void RenderText(std::string, ivec2 pos, float scale, vec4 color);
+    void RenderText(std::string, vec2 pos, float scale, vec4 color);
 };
 
 struct Rectangle
@@ -86,6 +86,40 @@ struct Rectangle
 
 const struct Rectangle FullImage = Rectangle::FromCorner({ 0.0f, 0.0f }, 1, 1);
 
+struct OrthoView
+    : public Rectangle
+{
+public:
+    inline glm::mat3 Matrix() const
+    {
+        return Scale({ 2 / Width(), 2 / Height() }) *
+            Translate({ -X, -Y });
+    }
+
+    inline OrthoView(const Rectangle &r)
+    {
+        *static_cast<Rectangle *>(this) = r;
+    }
+
+    inline OrthoView() = default;
+
+    void DrawSpritePart(Sprite spr, vec2 pos, Rectangle sprPart, vec2 scale, float rotation, vec4 color);
+    inline void DrawSpritePart(Sprite spr, vec2 pos, Rectangle sprPart)
+    {
+        DrawSpritePart(spr, pos, sprPart, { 1,1 }, 0, Colors::White);
+    }
+
+    inline void DrawSprite(Sprite spr, vec2 pos)
+    {
+        DrawSpritePart(spr, pos, FullImage);
+    }
+    
+    inline void DrawSprite(Sprite spr, vec2 pos, float rot)
+    {
+        DrawSpritePart(spr, pos, FullImage, { 1, 1 }, rot, Colors::White);
+    }
+};
+
 struct View
 {
     struct Rectangle Game, Display;
@@ -98,7 +132,6 @@ Sprite DEBUG_LoadSprite(std::string filename);
 
 void SetUniform(std::string name, const glm::mat3& value);
 
-void DEBUG_DrawSprite(Sprite spr, glm::mat3, struct Rectangle sprPart,
-                      float rot);
+void DEBUG_DrawSprite(Sprite spr, glm::mat3 projection, Rectangle sprPart, vec4 color);
 
 Font DEBUG_LoadFont(std::string filename, int pxSize, Shader s);
