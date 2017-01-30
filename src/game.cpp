@@ -326,7 +326,7 @@ Game_Render(Game& info)
     for (auto s : info.Statics) {
         DEBUG_DrawSprite(spr, viewMat * Translate({ s.Rect.X, s.Rect.Y }) *
             Scale({ s.Rect.Width(), s.Rect.Height() }),
-            FullImage, Colors::Red);
+            FullImage, Colors::White);
     }
 
     for (auto c : info.GUIComponents) {

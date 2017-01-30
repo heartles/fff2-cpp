@@ -8,6 +8,7 @@ class WeaponBase : public GameComponent
     virtual void PrimaryTryFire() = 0;
     virtual void SecondaryTryFire() = 0;
     virtual void TryReload() = 0;
+    virtual void DrawGUI() = 0;
 
   protected:
     inline WeaponBase(Game& g)

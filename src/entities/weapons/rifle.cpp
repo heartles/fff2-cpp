@@ -30,10 +30,9 @@ Rifle::SecondaryTryFire()
 void
 Rifle::TryReload()
 {
-    if (_ammo < MagSize && _mags > 0) {
-        _ammo = MagSize;
-        --_mags;
+    if (_ammo < MagSize && _mags > 0 && !_reloading) {
         _reloadTimeLeft = ReloadTime;
+        _reloading = true;
     }
 }
 
@@ -46,11 +45,22 @@ Rifle::Update()
         _cooldown = 0;
     }
 
-    _reloadTimeLeft -= Engine.DT;
+    if (_reloading) {
+        _reloadTimeLeft -= Engine.DT;
 
-    if (_reloadTimeLeft < 0) {
-        _reloadTimeLeft = 0;
+        if (_reloadTimeLeft < 0) {
+            _ammo = MagSize;
+            --_mags;
+            _reloadTimeLeft = 0;
+            _reloading = false;
+        }
     }
+}
+
+void
+Rifle::DrawGUI()
+{
+    //TODO: reloading indicator code
 }
 
 Rifle::Rifle(Player* p, Game& g)

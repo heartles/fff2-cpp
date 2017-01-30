@@ -1,0 +1,43 @@
+{ "height":8,
+ "layers":[
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 156, 0, 0, 0, 0, 0, 0, 156, 156, 0, 0, 0, 0, 0, 0, 156, 156, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":8,
+         "name":"Tile Layer 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":8,
+         "x":0,
+         "y":0
+        }],
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tileheight":64,
+ "tilesets":[
+        {
+         "columns":27,
+         "firstgid":1,
+         "image":"..\/..\/..\/content\/Art\/export\/Town_tilemap.png",
+         "imageheight":1280,
+         "imagewidth":1728,
+         "margin":0,
+         "name":"Town_tilemap",
+         "properties":
+            {
+             "type":"tilemap"
+            },
+         "propertytypes":
+            {
+             "type":"string"
+            },
+         "spacing":0,
+         "tilecount":540,
+         "tileheight":64,
+         "tilewidth":64
+        }],
+ "tilewidth":64,
+ "version":1,
+ "width":8
+}

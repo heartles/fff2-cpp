@@ -13,6 +13,7 @@ class Rifle : public WeaponBase
 
     // zero when not reloading
     float _reloadTimeLeft = 0;
+    bool _reloading = false;
 
     // zero when cooldown over
     float _cooldown = 0;
@@ -22,6 +23,7 @@ class Rifle : public WeaponBase
     virtual void SecondaryTryFire() override;
     virtual void TryReload() override;
     virtual void Update() override;
+    virtual void DrawGUI() override;
 
     Rifle(Player*, Game&);
 };

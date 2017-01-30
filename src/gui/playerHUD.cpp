@@ -15,4 +15,6 @@ PlayerHUD::Draw()
         Engine.Screen.Max() - vec2{ 50, 50 },
         1,
         Colors::Black);
+
+    _player->_currentWeapon->DrawGUI();
 }
