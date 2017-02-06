@@ -3,7 +3,6 @@
 #include "../../player.h"
 #include "../bullet.h"
 
-const float BulletSpeed = 22.0f;
 const int MagSize = 12;
 const float Cooldown = 0.25f;
 const float ReloadTime = 2;
@@ -11,7 +10,7 @@ const float ReloadTime = 2;
 void
 Rifle::PrimaryTryFire()
 {
-    if (_ammo > 0 && _cooldown == 0 && _reloadTimeLeft == 0) {
+    if (_ammo > 0 && _cooldown == 0 && !_reloading) {
         Engine.AddComponent(
           new Bullet(Engine, _player->Pos(),
                      vec2::FromMagnitudeTheta(BulletSpeed, _player->Rot() + pi),
@@ -60,7 +59,7 @@ Rifle::Update()
 void
 Rifle::DrawGUI()
 {
-    //TODO: reloading indicator code
+    // TODO: reloading indicator code
 }
 
 Rifle::Rifle(Player* p, Game& g)

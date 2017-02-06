@@ -1,13 +1,13 @@
 #pragma once
 
 #include <cstdint>
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
 
+#include <ft2build.h>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
-#include <ft2build.h>
 #include FT_FREETYPE_H
 
 #include "math.h"
@@ -21,19 +21,18 @@ struct Sprite
     GLuint TextureID;
 };
 
-namespace Colors
-{
-    const vec4 Black = { 0,0,0,1 };
-    const vec4 White = { 1,1,1,1 };
-    const vec4 Red = { 1,0,0,1 };
-    const vec4 Green = { 0,1,0,1 };
-    const vec4 Blue = { 0,0,1,1 };
+namespace Colors {
+const vec4 Black = { 0, 0, 0, 1 };
+const vec4 White = { 1, 1, 1, 1 };
+const vec4 Red = { 1, 0, 0, 1 };
+const vec4 Green = { 0, 1, 0, 1 };
+const vec4 Blue = { 0, 0, 1, 1 };
 };
 
 struct Character
 {
     Sprite Sprite;
-    ivec2 Offset; // Offset from origin to left/top of char
+    ivec2 Offset;  // Offset from origin to left/top of char
     ivec2 Advance; // Offset to next char/line
 };
 
@@ -42,11 +41,14 @@ class Font
     std::map<uint64_t, Character> _codepoints;
     Shader _shader;
 
-public:
+  public:
     inline Font() {}
 
-    inline Font(std::map<uint64_t, Character> &&p, Shader s) : _codepoints(p), _shader(s)
-    {}
+    inline Font(std::map<uint64_t, Character>&& p, Shader s)
+      : _codepoints(p)
+      , _shader(s)
+    {
+    }
 
     void RenderText(std::string, vec2 pos, float scale, vec4 color);
 };
@@ -86,37 +88,34 @@ struct Rectangle
 
 const struct Rectangle FullImage = Rectangle::FromCorner({ 0.0f, 0.0f }, 1, 1);
 
-struct OrthoView
-    : public Rectangle
+struct OrthoView : public Rectangle
 {
     float _scale = 64;
-public:
+
+  public:
     inline glm::mat3 Matrix() const
     {
-        return Scale({ 2 / Width(), 2 / Height() }) *
-            Translate({ -X, -Y });
+        return Scale({ 2 / Width(), 2 / Height() }) * Translate({ -X, -Y });
     }
 
-    inline OrthoView(const Rectangle &r)
-    {
-        *static_cast<Rectangle *>(this) = r;
-    }
+    inline OrthoView(const Rectangle& r) { *static_cast<Rectangle*>(this) = r; }
 
     inline OrthoView() = default;
 
     inline void SetScale(float f) { _scale = f; }
 
-    void DrawSpritePart(Sprite spr, vec2 pos, Rectangle sprPart, vec2 scale, float rotation, vec4 color);
+    void DrawSpritePart(Sprite spr, vec2 pos, Rectangle sprPart, vec2 scale,
+                        float rotation, vec4 color);
     inline void DrawSpritePart(Sprite spr, vec2 pos, Rectangle sprPart)
     {
-        DrawSpritePart(spr, pos, sprPart, { 1,1 }, 0, Colors::White);
+        DrawSpritePart(spr, pos, sprPart, { 1, 1 }, 0, Colors::White);
     }
 
     inline void DrawSprite(Sprite spr, vec2 pos)
     {
         DrawSpritePart(spr, pos, FullImage);
     }
-    
+
     inline void DrawSprite(Sprite spr, vec2 pos, float rot)
     {
         DrawSpritePart(spr, pos, FullImage, { 1, 1 }, rot, Colors::White);
@@ -135,6 +134,7 @@ Sprite DEBUG_LoadSprite(std::string filename);
 
 void SetUniform(std::string name, const glm::mat3& value);
 
-void DEBUG_DrawSprite(Sprite spr, glm::mat3 projection, Rectangle sprPart, vec4 color);
+void DEBUG_DrawSprite(Sprite spr, glm::mat3 projection, Rectangle sprPart,
+                      vec4 color);
 
 Font DEBUG_LoadFont(std::string filename, int pxSize, Shader s);

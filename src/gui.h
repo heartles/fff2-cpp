@@ -3,14 +3,15 @@
 struct Game;
 class GUIComponent
 {
-public:
+  public:
     inline virtual void Draw() {}
 
-protected:
-    Game &Engine;
-    inline GUIComponent(Game &g)
-        : Engine(g)
-    {}
+  protected:
+    Game& Engine;
+    inline GUIComponent(Game& g)
+      : Engine(g)
+    {
+    }
 
     inline virtual ~GUIComponent() {}
 };

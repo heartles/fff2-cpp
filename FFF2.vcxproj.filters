@@ -144,6 +144,9 @@
     <ClCompile Include="src\entities\spawner.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\entities\weapons\shotgun.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vendor\khr\khrplatform.h">
@@ -31755,6 +31758,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\entities\spawner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\weapons\shotgun.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

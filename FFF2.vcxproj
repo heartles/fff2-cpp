@@ -108,6 +108,9 @@
       <Command>make -C $(SolutionDir) OUTDIR=$(TargetDir)content -j8</Command>
       <Message>Build Content</Message>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>powershell -File $(SolutionDir)format.ps1 $(SolutionDir)src</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -138,6 +141,9 @@
       <Command>make -C $(SolutionDir) OUTDIR=$(TargetDir)content -j8</Command>
       <Message>Build Content</Message>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>powershell -File $(SolutionDir)format.ps1 $(SolutionDir)src</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -161,6 +167,9 @@
       <Command>make -C $(SolutionDir) OUTDIR=$(TargetDir)content -j8</Command>
       <Message>Build Content</Message>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>powershell -File $(SolutionDir)format.ps1 $(SolutionDir)src</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -184,6 +193,9 @@
       <Command>make -C $(SolutionDir) OUTDIR=$(TargetDir)content -j8</Command>
       <Message>Build Content</Message>
     </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>powershell -File $(SolutionDir)format.ps1 $(SolutionDir)src</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\entities\enemy.cpp" />
@@ -192,6 +204,7 @@
     <ClCompile Include="src\content.cpp" />
     <ClCompile Include="src\entities\spawner.cpp" />
     <ClCompile Include="src\entities\weapons\rifle.cpp" />
+    <ClCompile Include="src\entities\weapons\shotgun.cpp" />
     <ClCompile Include="src\game.cpp" />
     <ClCompile Include="src\graphics.cpp" />
     <ClCompile Include="src\gui\framerateStats.cpp" />
@@ -238,6 +251,7 @@
     <ClInclude Include="src\entities\spawner.h" />
     <ClInclude Include="src\entities\weapons\base.h" />
     <ClInclude Include="src\entities\weapons\rifle.h" />
+    <ClInclude Include="src\entities\weapons\shotgun.h" />
     <ClInclude Include="src\game.h" />
     <ClInclude Include="src\graphics.h" />
     <ClInclude Include="src\gui.h" />

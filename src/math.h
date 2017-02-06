@@ -10,6 +10,31 @@ sign(T val)
     return T((T(0) < val) - (val < T(0)));
 }
 
+template <typename T>
+inline T
+Max(T v1, T v2)
+{
+    if (v1 < v2)
+        return v2;
+    return v1;
+}
+
+template <typename T>
+inline T
+Min(T v1, T v2)
+{
+    if (v1 < v2)
+        return v1;
+    return v2;
+}
+
+template <typename T>
+inline T
+Clamp(T val, T min, T max)
+{
+    return Min(Max(val, min), max);
+}
+
 struct vec2
 {
     union
@@ -88,7 +113,8 @@ struct vec2
         return *this;
     }
 
-    inline vec2 operator/(float scalar) const {
+    inline vec2 operator/(float scalar) const
+    {
         return { x / scalar, y / scalar };
     }
 
@@ -107,12 +133,8 @@ struct ivec2
         return { x * scalar, y * scalar };
     }
 
-    inline operator vec2() const
-    {
-        return { float(x), float(y) };
-    }
+    inline operator vec2() const { return { float(x), float(y) }; }
 };
-
 
 struct vec3
 {

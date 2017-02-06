@@ -5,10 +5,10 @@
 #include <json/json.h>
 
 #include "common.h"
-#include "graphics.h"
-#include "math.h"
 #include "content.h"
+#include "graphics.h"
 #include "gui.h"
+#include "math.h"
 
 typedef Sprite (*PFN_LOADIMAGE)(std::string filename);
 typedef void (*PFN_DRAWSPRITE)(Sprite, struct Rectangle, struct Rectangle,
@@ -75,8 +75,8 @@ struct Game
     OrthoView View;
     OrthoView Screen;
 
-    std::vector<GameComponent *> Components;
-    std::vector<GUIComponent *> GUIComponents;
+    std::vector<GameComponent*> Components;
+    std::vector<GUIComponent*> GUIComponents;
     std::vector<Tileset> Tilesets;
     std::vector<Tile> Tiles;
 
@@ -85,21 +85,21 @@ struct Game
     std::vector<BoundingBox> Statics;
 
     std::vector<GameComponent *> componentAddQueue, componentRmQueue;
-    inline void AddComponent(GameComponent *c)
+    inline void AddComponent(GameComponent* c)
     {
         componentAddQueue.push_back(c);
     }
-    inline void RemoveComponent(GameComponent *c)
+    inline void RemoveComponent(GameComponent* c)
     {
         componentRmQueue.push_back(c);
     }
-    
+
     std::vector<GUIComponent *> guiComponentAddQueue, guiComponentRmQueue;
-    inline void AddComponent(GUIComponent *c)
+    inline void AddComponent(GUIComponent* c)
     {
         guiComponentAddQueue.push_back(c);
     }
-    inline void RemoveComponent(GUIComponent *c)
+    inline void RemoveComponent(GUIComponent* c)
     {
         guiComponentRmQueue.push_back(c);
     }

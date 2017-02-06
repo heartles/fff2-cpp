@@ -1,11 +1,11 @@
 #pragma once
 
+#include <cctype>
 #include <cstdint>
 #include <cstdlib>
+#include <sstream>
 #include <string>
 #include <vector>
-#include <sstream>
-#include <cctype>
 
 #include <glm/glm.hpp>
 
@@ -22,7 +22,7 @@ struct Input
     bool Keyboard[349];
     bool Mouse[8];
     float MouseX, MouseY;
-};  
+};
 
 template <typename T>
 inline size_t
@@ -72,10 +72,11 @@ struct StackAlloc : public Allocator
     ~StackAlloc() override { std::free(_memory); }
 };
 
-inline std::string ToLower(const std::string &s)
+inline std::string
+ToLower(const std::string& s)
 {
     std::stringstream out{};
-    
+
     for (auto c : s) {
         out.put(std::tolower(c));
     }

@@ -27,7 +27,8 @@ Enemy::Update()
 void
 Enemy::Draw()
 {
-    Engine.View.DrawSpritePart(_spr, _pos, FullImage, { 0.5f, 0.5f }, 0, Colors::White);
+    Engine.View.DrawSpritePart(_spr, _pos, FullImage, { 0.5f, 0.5f }, 0,
+                               Colors::White);
 }
 
 void

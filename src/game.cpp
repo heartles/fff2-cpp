@@ -9,14 +9,14 @@
 #include <json/json.h>
 
 #include "content.h"
+#include "entities/enemy.h"
+#include "entities/spawner.h"
 #include "graphics.h"
+#include "gui.h"
+#include "gui/framerateStats.h"
 #include "math.h"
 #include "player.h"
 #include "shader.h"
-#include "gui.h"
-#include "gui/framerateStats.h"
-#include "entities/enemy.h"
-#include "entities/spawner.h"
 
 using namespace std;
 
@@ -43,7 +43,6 @@ ToGame(Game& info, vec2 screen)
     return result;
 }
 
-
 void
 Game_Init(Game& info)
 {
@@ -55,7 +54,7 @@ Game_Init(Game& info)
     info.ClearColor = Colors::White;
 
     info.AddComponent(new FramerateStats(info));
-    
+
     auto shader = DEBUG_LoadShader(info.GameDir + "/content/textured.gl.vert",
                                    info.GameDir + "/content/textured.gl.frag");
 
@@ -66,7 +65,6 @@ Game_Init(Game& info)
     vector<Tileset>* Tilesets = &info.Tilesets;
 
     LoadLevel(fileLoc, info);
-
 }
 
 void
@@ -295,14 +293,15 @@ Game_Render(Game& info)
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    auto shader = info.Content.LoadShader(info.GameDir + "/content/textured.gl.vert",
-        info.GameDir + "/content/textured.gl.frag");
+    auto shader =
+      info.Content.LoadShader(info.GameDir + "/content/textured.gl.vert",
+                              info.GameDir + "/content/textured.gl.frag");
 
     shader.Apply();
 
     glm::mat3 viewMat = // Identity<mat3>();
-        Scale({ 2 / info.View.Width(), 2 / info.View.Height() }) *
-        Translate({ -info.View.X, -info.View.Y });
+      Scale({ 2 / info.View.Width(), 2 / info.View.Height() }) *
+      Translate({ -info.View.X, -info.View.Y });
 
     for (auto& t : info.Tilesets) {
         glBindVertexArray(t.VertexArrayID);
@@ -324,18 +323,17 @@ Game_Render(Game& info)
     }
 
     auto spr =
-        info.Content.LoadSprite(info.GameDir + "/content/InvisWall_spr_0.png");
+      info.Content.LoadSprite(info.GameDir + "/content/InvisWall_spr_0.png");
 
     for (auto s : info.Statics) {
         DEBUG_DrawSprite(spr, viewMat * Translate({ s.Rect.X, s.Rect.Y }) *
-            Scale({ s.Rect.Width(), s.Rect.Height() }),
-            FullImage, Colors::White);
+                                Scale({ s.Rect.Width(), s.Rect.Height() }),
+                         FullImage, Colors::White);
     }
 
     for (auto c : info.GUIComponents) {
         c->Draw();
     }
-
 }
 
 void

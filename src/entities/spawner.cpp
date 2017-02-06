@@ -4,8 +4,9 @@
 
 const float SpawnInterval = 5;
 
-EnemySpawner::EnemySpawner(vec2 pos, Game &g)
-    : GameComponent(g), _pos(pos)
+EnemySpawner::EnemySpawner(vec2 pos, Game& g)
+  : GameComponent(g)
+  , _pos(pos)
 {
     _spr = Engine.Content.LoadSprite(Engine.GameDir + "/content/burgerbox.png");
 }

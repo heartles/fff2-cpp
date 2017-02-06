@@ -13,3 +13,5 @@ class Bullet : public GameComponent
     virtual void Update() override;
     virtual void Draw() override;
 };
+
+const float BulletSpeed = 22.0f;

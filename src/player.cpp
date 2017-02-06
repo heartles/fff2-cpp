@@ -2,14 +2,15 @@
 
 #include "common.h"
 #include "entities/bullet.h"
+#include "entities/weapons/rifle.h"
+#include "entities/weapons/shotgun.h"
 #include "game.h"
 #include "graphics.h"
-#include "math.h"
 #include "gui/playerHUD.h"
+#include "math.h"
 
 // TODO
 #include <GLFW/glfw3.h>
-
 
 Player::Player(Game& game, const vec2& pos)
   : GameComponent(game)
@@ -20,10 +21,13 @@ Player::Player(Game& game, const vec2& pos)
       Engine.Content.LoadSprite(game.GameDir + "/content/Player_Rifle.png");
     Log("Done");
 
-
     _rifle = new Rifle(this, Engine);
-    _currentWeapon = _rifle;
     Engine.AddComponent(_rifle);
+
+    _shotgun = new Shotgun(this, Engine);
+    Engine.AddComponent(_shotgun);
+
+    _currentWeapon = _shotgun;
 
     Engine.AddComponent(new PlayerHUD(this, Engine));
 }
@@ -92,5 +96,6 @@ Player::Update()
 void
 Player::Draw()
 {
-    Engine.View.DrawSpritePart(_spr, _pos, FullImage, { .5f, .5f }, _rot, Colors::White);
+    Engine.View.DrawSpritePart(_spr, _pos, FullImage, { .5f, .5f }, _rot,
+                               Colors::White);
 }

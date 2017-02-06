@@ -23,7 +23,7 @@ Bullet::Update()
     }
 
     for (auto c : Engine.Components) {
-        auto enemy = dynamic_cast<Enemy *>(c);
+        auto enemy = dynamic_cast<Enemy*>(c);
         if (enemy) {
             if (mask.Intersects(enemy->Mask())) {
                 enemy->TakeDamage(75);

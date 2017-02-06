@@ -2,11 +2,13 @@
 
 #include <glm/glm.hpp>
 
-#include "entities/weapons/rifle.h"
+#include "entities/weapons/base.h"
 #include "game.h"
 #include "graphics.h"
 #include "math.h"
 
+class Rifle;
+class Shotgun;
 class Player : public GameComponent
 {
     Sprite _spr;
@@ -15,6 +17,7 @@ class Player : public GameComponent
     float _rot;
 
     Rifle* _rifle;
+    Shotgun* _shotgun;
     WeaponBase* _currentWeapon;
 
     friend class PlayerHUD;

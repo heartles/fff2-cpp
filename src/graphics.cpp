@@ -1,7 +1,7 @@
 #include "graphics.h"
 
-#include <exception>
 #include <array>
+#include <exception>
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -40,11 +40,9 @@ DEBUG_LoadFont(std::string filename, int pxSize, Shader s)
     std::map<uint64_t, Character> points{};
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // Disable byte-alignment restriction
 
-    for (GLubyte c = 0; c < 128; c++)
-    {
-        // Load character glyph 
-        if (FT_Load_Char(face, c, FT_LOAD_RENDER))
-        {
+    for (GLubyte c = 0; c < 128; c++) {
+        // Load character glyph
+        if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
             Log("ERROR::FREETYTPE: Failed to load Glyph");
             continue;
         }
@@ -52,52 +50,44 @@ DEBUG_LoadFont(std::string filename, int pxSize, Shader s)
         GLuint texture;
         glGenTextures(1, &texture);
         glBindTexture(GL_TEXTURE_2D, texture);
-        glTexImage2D(
-            GL_TEXTURE_2D,
-            0,
-            GL_RED,
-            face->glyph->bitmap.width,
-            face->glyph->bitmap.rows,
-            0,
-            GL_RED,
-            GL_UNSIGNED_BYTE,
-            face->glyph->bitmap.buffer
-        );
-        
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, face->glyph->bitmap.width,
+                     face->glyph->bitmap.rows, 0, GL_RED, GL_UNSIGNED_BYTE,
+                     face->glyph->bitmap.buffer);
+
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        
+
         Character character = {
-            Sprite{ int(face->glyph->bitmap.width), int(face->glyph->bitmap.rows), std::vector<uint8_t>{}, texture},
-            {face->glyph->bitmap_left, face->glyph->bitmap_top},
-            {face->glyph->advance.x, face->glyph->advance.y}
+            Sprite{ int(face->glyph->bitmap.width),
+                    int(face->glyph->bitmap.rows), std::vector<uint8_t>{},
+                    texture },
+            { face->glyph->bitmap_left, face->glyph->bitmap_top },
+            { face->glyph->advance.x, face->glyph->advance.y }
         };
         points.insert(std::pair<GLchar, Character>(c, character));
     }
 
     FT_Done_Face(face);
 
-
     return Font(std::move(points), s);
 }
 
 const std::array<const vec2, 4> uvFullImage{ {
-    {
-        0.0f, 1.0f,
-    }, // Bottom left
-    {
-        1.0f, 1.0f,
-    }, // Bottom right
-    {
-        0.0f, 0.0f,
-    }, // Top Left
-    {
-        1.0f, 0.0f,
-    }, // Top right
-    } };
-
+  {
+    0.0f, 1.0f,
+  }, // Bottom left
+  {
+    1.0f, 1.0f,
+  }, // Bottom right
+  {
+    0.0f, 0.0f,
+  }, // Top Left
+  {
+    1.0f, 0.0f,
+  }, // Top right
+} };
 
 void
 Font::RenderText(std::string text, vec2 pos, float scale, vec4 color)
@@ -107,26 +97,21 @@ Font::RenderText(std::string text, vec2 pos, float scale, vec4 color)
     for (auto c : text) {
         auto ch = _codepoints[c];
 
-        vec2 chPos = {
-            pos.x + scale * ch.Offset.x,
-            pos.y - scale * (ch.Sprite.Height - ch.Offset.y)
-        };
+        vec2 chPos = { pos.x + scale * ch.Offset.x,
+                       pos.y - scale * (ch.Sprite.Height - ch.Offset.y) };
 
-        vec2 wh = {
-            ch.Sprite.Width * scale,
-            ch.Sprite.Height * scale
-        };
+        vec2 wh = { ch.Sprite.Width * scale, ch.Sprite.Height * scale };
 
-        glm::mat3 screenToHUD = 
-            Translate({ -1, -1 }) *
-            Scale({ 2 / 1920.0f, 2 / 1080.0f }) *
-            Translate(chPos) * Translate(wh / 2) * Scale(wh);/**/
-        
-        glUniform3f(glGetUniformLocation(_shader._program, "textColor"), color.r, color.g, color.b);
+        glm::mat3 screenToHUD =
+          Translate({ -1, -1 }) * Scale({ 2 / 1920.0f, 2 / 1080.0f }) *
+          Translate(chPos) * Translate(wh / 2) * Scale(wh); /**/
 
-        DEBUG_DrawSprite(Sprite{ 0,0,{}, ch.Sprite.TextureID}, screenToHUD, FullImage, Colors::White); 
+        glUniform3f(glGetUniformLocation(_shader._program, "textColor"),
+                    color.r, color.g, color.b);
+
+        DEBUG_DrawSprite(Sprite{ 0, 0, {}, ch.Sprite.TextureID }, screenToHUD,
+                         FullImage, Colors::White);
         pos.x += ch.Advance.x / 64 * scale;
-
     }
 }
 
@@ -233,10 +218,9 @@ SetUniform(std::string name, const glm::mat3& value)
     glUniformMatrix3fv(loc, 1, GL_FALSE, (GLfloat*)&value);
 }
 
-
-
 void
-DEBUG_DrawSprite(Sprite spr, glm::mat3 projection, Rectangle sprPart, vec4 color)
+DEBUG_DrawSprite(Sprite spr, glm::mat3 projection, Rectangle sprPart,
+                 vec4 color)
 {
     if (locationBuffer == 0 || uvBuffer == 0) {
         initializeBuffers();
@@ -264,8 +248,10 @@ DEBUG_DrawSprite(Sprite spr, glm::mat3 projection, Rectangle sprPart, vec4 color
 
     GLint shader;
     glGetIntegerv(GL_CURRENT_PROGRAM, &shader);
-    glUniformMatrix3fv(glGetUniformLocation(shader, "projection"), 1, GL_FALSE, reinterpret_cast<GLfloat*>(&projection));
-    glUniform4f(glGetUniformLocation(shader, "color"), color.r, color.g, color.b, color.a);
+    glUniformMatrix3fv(glGetUniformLocation(shader, "projection"), 1, GL_FALSE,
+                       reinterpret_cast<GLfloat*>(&projection));
+    glUniform4f(glGetUniformLocation(shader, "color"), color.r, color.g,
+                color.b, color.a);
 
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
@@ -276,13 +262,12 @@ DEBUG_DrawSprite(Sprite spr, glm::mat3 projection, Rectangle sprPart, vec4 color
 }
 
 void
-OrthoView::DrawSpritePart(Sprite spr, vec2 pos, Rectangle sprPart, vec2 scale, float rotation, vec4 color)
+OrthoView::DrawSpritePart(Sprite spr, vec2 pos, Rectangle sprPart, vec2 scale,
+                          float rotation, vec4 color)
 {
-    auto projection =
-        Matrix() *
-        Translate(pos) *
-        Rotate(-rotation) *
-        Scale(scale) * Scale({ spr.Width/_scale, spr.Height/_scale });
+    auto projection = Matrix() * Translate(pos) * Rotate(-rotation) *
+                      Scale(scale) *
+                      Scale({ spr.Width / _scale, spr.Height / _scale });
 
     DEBUG_DrawSprite(spr, projection, sprPart, color);
 }

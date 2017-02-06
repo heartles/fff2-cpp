@@ -4,13 +4,13 @@
 
 #include "../graphics.h"
 
-class FramerateStats
-    : public GUIComponent
+class FramerateStats : public GUIComponent
 {
     int frameCount = 0;
     float frameCountTime = 0, fps = 0;
     Font _font;
-public:
-    FramerateStats(Game &g);    
+
+  public:
+    FramerateStats(Game& g);
     virtual void Draw() override;
 };

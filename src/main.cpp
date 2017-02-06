@@ -111,7 +111,8 @@ main(int argc, char** argv)
 
             Game_Update(g);
 
-            glClearColor(g.ClearColor.r, g.ClearColor.g, g.ClearColor.b, g.ClearColor.a);
+            glClearColor(g.ClearColor.r, g.ClearColor.g, g.ClearColor.b,
+                         g.ClearColor.a);
             glClear(GL_COLOR_BUFFER_BIT);
             Game_Render(g);
 
@@ -138,7 +139,7 @@ main(int argc, char** argv)
 #ifdef DEBUG_EXCEPTION_HANDLE
 
     }
-    
+
     catch (std::exception e) {
         std::cout << e.what() << endl;
         std::exit(-1);
