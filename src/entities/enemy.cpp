@@ -27,9 +27,5 @@ Enemy::Update()
 void
 Enemy::Draw()
 {
-    auto modelView =
-      Scale({ 2 / Engine.View.Width(), 2 / Engine.View.Height() }) *
-      Translate({ -Engine.View.X, -Engine.View.Y }) * Translate(_pos);
-
-    DEBUG_DrawSprite(_spr, modelView, FullImage, Colors::White);
+    Engine.View.DrawSpritePart(_spr, _pos, FullImage, { 0.5f, 0.5f }, 0, Colors::White);
 }

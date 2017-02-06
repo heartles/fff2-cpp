@@ -89,6 +89,7 @@ const struct Rectangle FullImage = Rectangle::FromCorner({ 0.0f, 0.0f }, 1, 1);
 struct OrthoView
     : public Rectangle
 {
+    float _scale = 64;
 public:
     inline glm::mat3 Matrix() const
     {
@@ -102,6 +103,8 @@ public:
     }
 
     inline OrthoView() = default;
+
+    inline void SetScale(float f) { _scale = f; }
 
     void DrawSpritePart(Sprite spr, vec2 pos, Rectangle sprPart, vec2 scale, float rotation, vec4 color);
     inline void DrawSpritePart(Sprite spr, vec2 pos, Rectangle sprPart)

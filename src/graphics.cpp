@@ -282,7 +282,7 @@ OrthoView::DrawSpritePart(Sprite spr, vec2 pos, Rectangle sprPart, vec2 scale, f
         Matrix() *
         Translate(pos) *
         Rotate(-rotation) *
-        Scale(scale);
+        Scale(scale) * Scale({ spr.Width/_scale, spr.Height/_scale });
 
     DEBUG_DrawSprite(spr, projection, sprPart, color);
 }

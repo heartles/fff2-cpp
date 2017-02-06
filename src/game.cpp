@@ -135,7 +135,7 @@ LoadLevel(const std::string& fileLoc, Game& info)
                 std::string type = ToLower(obj["type"].asString());
                 if (type == "player") {
                     info.Components.push_back(new Player(info, pos));
-                } else if (type == "invisWall") {
+                } else if (type == "inviswall") {
                     info.Statics.push_back(
                       BoundingBox{ pos.x, pos.y, halfWidth, halfHeight });
                 } else if (type == "basicenemy") {
