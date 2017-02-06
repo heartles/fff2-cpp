@@ -1,5 +1,7 @@
 #include "bullet.h"
 
+#include "enemy.h"
+
 Bullet::Bullet(Game& g, const vec2& pos, const vec2& vel, float rot)
   : GameComponent(g)
   , _pos(pos)
@@ -17,6 +19,16 @@ Bullet::Update()
     for (auto s : Engine.Statics) {
         if (s.Rect.Intersects(mask)) {
             Engine.RemoveComponent(this);
+        }
+    }
+
+    for (auto c : Engine.Components) {
+        auto enemy = dynamic_cast<Enemy *>(c);
+        if (enemy) {
+            if (mask.Intersects(enemy->Mask())) {
+                enemy->TakeDamage(75);
+                Engine.RemoveComponent(this);
+            }
         }
     }
 }

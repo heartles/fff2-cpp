@@ -19,7 +19,7 @@ Enemy::Update()
 
     auto pos = _pos + vel;
 
-    ResolveCollision({ _pos.x, _pos.y, 0.5, 0.5 }, &pos, Engine);
+    ResolveCollision(Mask(), &pos, Engine);
 
     _pos = pos;
 }
@@ -28,4 +28,13 @@ void
 Enemy::Draw()
 {
     Engine.View.DrawSpritePart(_spr, _pos, FullImage, { 0.5f, 0.5f }, 0, Colors::White);
+}
+
+void
+Enemy::TakeDamage(float dmg)
+{
+    _health -= dmg;
+    if (_health <= 0) {
+        Engine.RemoveComponent(this);
+    }
 }
