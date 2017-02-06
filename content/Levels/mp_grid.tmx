@@ -24,13 +24,13 @@
    <property name="type" value="spritecollection"/>
   </properties>
   <tile id="7">
-   <image width="64" height="64" source="../Art/export/burgerbox_spr_0.png"/>
+   <image source="../Art/export/burgerbox_spr_0.png"/>
   </tile>
   <tile id="26">
    <image width="64" height="64" source="../Art/export/InvisWall_spr_0.png"/>
   </tile>
   <tile id="52">
-   <image width="128" height="128" source="../Art/export/Player_Rifle_spr_0.png"/>
+   <image source="../Art/export/Player_Rifle_spr_0.png"/>
   </tile>
  </tileset>
  <layer name="Base Layer" width="156" height="156">

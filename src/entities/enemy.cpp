@@ -5,7 +5,7 @@ Enemy::Enemy(vec2 pos, Game& g)
   , _pos(pos)
 {
     _target = g.GetInstanceOf<Player>();
-    _spr = Engine.Content.LoadSprite(g.GameDir + "/content/Burger_spr_0.png");
+    _spr = Engine.Content.LoadSprite(g.GameDir + "/content/burger_enemy.png");
 }
 
 void

@@ -4,6 +4,8 @@
 #include <cstdlib>
 #include <string>
 #include <vector>
+#include <sstream>
+#include <cctype>
 
 #include <glm/glm.hpp>
 
@@ -69,3 +71,14 @@ struct StackAlloc : public Allocator
 
     ~StackAlloc() override { std::free(_memory); }
 };
+
+inline std::string ToLower(const std::string &s)
+{
+    std::stringstream out{};
+    
+    for (auto c : s) {
+        out.put(std::tolower(c));
+    }
+
+    return out.str();
+}

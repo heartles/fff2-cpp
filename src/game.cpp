@@ -9,13 +9,14 @@
 #include <json/json.h>
 
 #include "content.h"
-#include "entities/enemy.h"
 #include "graphics.h"
 #include "math.h"
 #include "player.h"
 #include "shader.h"
 #include "gui.h"
 #include "gui/framerateStats.h"
+#include "entities/enemy.h"
+#include "entities/spawner.h"
 
 using namespace std;
 
@@ -131,14 +132,16 @@ LoadLevel(const std::string& fileLoc, Game& info)
                   vec2{ obj["x"].asFloat() / tileWidth + halfWidth,
                         -obj["y"].asFloat() / tileHeight + halfHeight };
 
-                std::string type = obj["type"].asString();
-                if (type == "Player") {
+                std::string type = ToLower(obj["type"].asString());
+                if (type == "player") {
                     info.Components.push_back(new Player(info, pos));
-                } else if (type == "InvisWall") {
+                } else if (type == "invisWall") {
                     info.Statics.push_back(
                       BoundingBox{ pos.x, pos.y, halfWidth, halfHeight });
-                } else if (type == "BasicEnemy") {
+                } else if (type == "basicenemy") {
                     info.Components.push_back(new Enemy(pos, info));
+                } else if (type == "spawner") {
+                    info.Components.push_back(new EnemySpawner(pos, info));
                 }
             }
         }
