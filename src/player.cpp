@@ -92,5 +92,5 @@ Player::Update()
 void
 Player::Draw()
 {
-    Engine.View.DrawSprite(_spr, _pos, _rot);
+    Engine.View.DrawSpritePart(_spr, _pos, FullImage, { .5f, .5f }, _rot, Colors::White);
 }

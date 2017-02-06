@@ -531,9 +531,8 @@
   <object id="44" name="Spawner" type="Spawner" gid="828" x="4928" y="4288" width="64" height="64"/>
   <object id="45" name="Spawner" type="Spawner" gid="828" x="5760" y="4288" width="64" height="64"/>
  </objectgroup>
- <objectgroup name="Walls" visible="0">
-  <object id="13" name="InvisWall" type="InvisWall" gid="847" x="1088" y="1024" width="1920" height="64"/>
-  <object id="15" name="InvisWall" type="InvisWall" gid="847" x="3008" y="1024" width="5696" height="64"/>
+ <objectgroup name="Walls">
+  <object id="15" name="InvisWall" type="InvisWall" gid="847" x="1024" y="1024" width="7680" height="64"/>
   <object id="16" name="InvisWall" type="InvisWall" gid="847" x="8640" y="7808" width="64" height="6784"/>
   <object id="17" name="InvisWall" type="InvisWall" gid="847" x="1024" y="1408" width="64" height="448"/>
   <object id="18" name="InvisWall" type="InvisWall" gid="847" x="1088" y="1408" width="1216" height="64"/>
