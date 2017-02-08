@@ -104,6 +104,11 @@ struct Game
         guiComponentRmQueue.push_back(c);
     }
 
+    inline bool KeyPressed(int id)
+    {
+        return Input.Keyboard[id] && !OldInput.Keyboard[id];
+    }
+
     template <typename T>
     inline T* GetInstanceOf()
     {

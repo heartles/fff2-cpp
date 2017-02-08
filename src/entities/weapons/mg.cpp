@@ -1,4 +1,4 @@
-#include "shotgun.h"
+#include "mg.h"
 
 #include <random>
 
@@ -6,30 +6,30 @@
 #include "../../player.h"
 #include "../bullet.h"
 
-const int MagSize = 12;
-const float ReloadTime = 2;
-const float Cooldown = 0.25f;
+const int MagSize = 100;
+const float ReloadTime = 3;
+const float Cooldown = 0.1f;
 
-static std::normal_distribution<float> randDist{ 0, pi / 16 };
+static std::normal_distribution<float> randDist{ 0, pi / 32 };
 static std::random_device gen;
 
 static float
 Random()
 {
-    return Clamp<float>(randDist(gen), -pi / 10, pi / 10);
+    return Clamp<float>(randDist(gen), -pi / 16, pi / 16);
 };
 
 void
-Shotgun::PrimaryTryFire()
+MG::PrimaryTryFire()
 {
     if (!_reloading && _cooldown == 0 && _ammo > 0) {
-        for (int i = 0; i < 16; i++) {
-            float r = Random();
-            Engine.AddComponent(new Bullet(
-              Engine, _player->Pos(),
-              vec2::FromMagnitudeTheta(BulletSpeed, _player->Rot() + pi + r),
-              _player->Rot() + r));
-        }
+        float r = Random() * _recoil;
+        Engine.AddComponent(new Bullet(
+          Engine, _player->Pos(),
+          vec2::FromMagnitudeTheta(BulletSpeed, _player->Rot() + pi + r),
+          _player->Rot() + r));
+
+        _recoil = Min(1.5f, _recoil + 0.1f);
 
         --_ammo;
         _cooldown = Cooldown;
@@ -37,7 +37,7 @@ Shotgun::PrimaryTryFire()
 }
 
 void
-Shotgun::TryReload()
+MG::TryReload()
 {
     if (_ammo < MagSize && _mags > 0 && !_reloading) {
         _reloadTimeLeft = ReloadTime;
@@ -46,19 +46,21 @@ Shotgun::TryReload()
 }
 
 void
-Shotgun::DrawGUI()
+MG::DrawGUI()
 {
 }
 
 void
-Shotgun::SecondaryTryFire()
+MG::SecondaryTryFire()
 {
 }
 
 void
-Shotgun::Update()
+MG::Update()
 {
     _cooldown -= Engine.DT;
+
+    _recoil = Max(0.0f, _recoil - Engine.DT / 2);
 
     if (_cooldown < 0) {
         _cooldown = 0;

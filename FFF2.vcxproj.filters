@@ -147,6 +147,9 @@
     <ClCompile Include="src\entities\weapons\shotgun.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\entities\weapons\mg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="vendor\khr\khrplatform.h">
@@ -31761,6 +31764,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\entities\weapons\shotgun.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\entities\weapons\mg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

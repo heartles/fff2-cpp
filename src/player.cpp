@@ -2,6 +2,7 @@
 
 #include "common.h"
 #include "entities/bullet.h"
+#include "entities/weapons/mg.h"
 #include "entities/weapons/rifle.h"
 #include "entities/weapons/shotgun.h"
 #include "game.h"
@@ -27,7 +28,10 @@ Player::Player(Game& game, const vec2& pos)
     _shotgun = new Shotgun(this, Engine);
     Engine.AddComponent(_shotgun);
 
-    _currentWeapon = _shotgun;
+    _mg = new MG(this, Engine);
+    Engine.AddComponent(_mg);
+
+    _currentWeapon = _mg;
 
     Engine.AddComponent(new PlayerHUD(this, Engine));
 }
@@ -90,6 +94,18 @@ Player::Update()
 
     if (Engine.Input.Keyboard['R'] && !Engine.OldInput.Keyboard['R']) {
         _currentWeapon->TryReload();
+    }
+
+    if (Engine.KeyPressed('1')) {
+        _currentWeapon = _rifle;
+    }
+
+    if (Engine.KeyPressed('2')) {
+        _currentWeapon = _shotgun;
+    }
+
+    if (Engine.KeyPressed('3')) {
+        _currentWeapon = _mg;
     }
 }
 

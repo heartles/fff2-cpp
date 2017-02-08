@@ -9,6 +9,7 @@
 
 class Rifle;
 class Shotgun;
+class MG;
 class Player : public GameComponent
 {
     Sprite _spr;
@@ -18,6 +19,7 @@ class Player : public GameComponent
 
     Rifle* _rifle;
     Shotgun* _shotgun;
+    MG* _mg;
     WeaponBase* _currentWeapon;
 
     friend class PlayerHUD;
